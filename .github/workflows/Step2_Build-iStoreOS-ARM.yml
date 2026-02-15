@@ -10,8 +10,10 @@ on:
         type: choice
         options:
           - all
-          - top55
-          - after55
+          - first50
+          - range50_100
+          - range100_150
+          - last20
           - a311d-oes_s922x-oes-plus_wxy-oect
           - nsy-g16-plus_nsy-g68-plus_bdy-g18-pro
           - s905d_s905x3_s912_s922x-ct2000
@@ -19,10 +21,13 @@ on:
           - a311d-oes
           - alark35-3500
           - anas3035
-          - aio-3399b 
+          - aio-3399b
+          - aio-3399c
+          - bdkj-bd-one
           - bdy-g18-pro
           - beikeyun
           - chainedbox
+          - cm3588-nas
           - crrc
           - dc-a588
           - dg3399
@@ -33,9 +38,11 @@ on:
           - eaidk-610
           - emb3531
           - fine3399
+          - firefly-jd4
           - firefly-rk3399
           - fmx1-pro
-          - jp-tvbox
+          - fmx1-pro-b
+          - gzpeite-p01
           - h28k
           - h66k
           - h68k
@@ -46,25 +53,32 @@ on:
           - hs530r
           - hugsun-x99
           - ipc-r
+          - jp-tvbox
           - king3399
           - kylin3399
           - lckfb-tspi
           - leez
           - lx-r3s
+          - lz-k3568
           - mrkaio-m68s
+          - nanopc-t4
           - nanopc-t6
+          - nanopi-m5
           - nanopi-r5c
           - nanopi-r5s
           - nsy-g16-plus
           - nsy-g68-plus
+          - orangepi-3b
           - orangepi-5-plus
           - orangepi-5b
+          - orangepi-zero3
           - panther-x2
           - photonicat
           - r66s
           - r68s
           - renegade-rk3328
           - rk3318-box
+          - rock-5-itx
           - rock5b
           - rock5c
           - ruisen-box
@@ -158,9 +172,11 @@ on:
           - smart-am60
           - station-m1
           - station-m2
+          - station-p2
           - sv-33a6x
           - swan1-w28
           - sw799
+          - taram
           - tanix-tx6
           - tb-ls3399
           - tn3399
