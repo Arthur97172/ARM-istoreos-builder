@@ -6,17 +6,9 @@ on:
       openwrt_board:
         description: "请选择设备型号（默认当前常见设备）"
         required: true
-        default: "all"
+        default: "cm3588-nas"
         type: choice
         options:
-          - all
-          - first50
-          - range50_100
-          - range100_150
-          - last20
-          - a311d-oes_s922x-oes-plus_wxy-oect
-          - nsy-g16-plus_nsy-g68-plus_bdy-g18-pro
-          - s905d_s905x3_s912_s922x-ct2000
           - a311d
           - a311d-oes
           - alark35-3500
