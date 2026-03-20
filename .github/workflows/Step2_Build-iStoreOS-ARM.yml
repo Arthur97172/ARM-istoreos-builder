@@ -15,9 +15,12 @@ on:
           - anas3035
           - aio-3399b
           - aio-3399c
+          - aio-3399c-ai
           - bdkj-bd-one
           - bdy-g18-pro
           - beikeyun
+          - boca-tcn100
+          - cd1000
           - chainedbox
           - cm3588-nas
           - crrc
@@ -34,6 +37,7 @@ on:
           - firefly-rk3399
           - fmx1-pro
           - fmx1-pro-b
+          - gea-6319
           - gzpeite-p01
           - h28k
           - h66k
@@ -42,7 +46,9 @@ on:
           - h88k
           - h88k-v3
           - h96-max-m2
+          - hk1-rbox-k8s
           - hs530r
+          - ht2
           - hugsun-x99
           - ipc-r
           - jp-tvbox
@@ -51,6 +57,9 @@ on:
           - lckfb-tspi
           - leez
           - lx-r3s
+          - lyt-t68m
+          - lz-d3568
+          - lz-d3588
           - lz-k3568
           - mrkaio-m68s
           - nanopc-t4
@@ -166,6 +175,7 @@ on:
           - station-m2
           - station-p2
           - sv-33a6x
+          - sv-33a6x-vpu
           - swan1-w28
           - sw799
           - taram
