@@ -33,6 +33,7 @@ on:
           - eaidk-610
           - emb3531
           - fine3399
+          - firefly-itx-3588j
           - firefly-jd4
           - firefly-rk3399
           - fmx1-pro
@@ -40,6 +41,7 @@ on:
           - gea-6319
           - gzpeite-p01
           - h28k
+          - h618-devboard
           - h66k
           - h68k
           - h69k
@@ -139,6 +141,7 @@ on:
           - s905x3-ip1001m
           - s905x3-q1
           - s905x3-q2
+          - s905x3-tox1
           - s905x3-tx3
           - s905x3-tx3-bz
           - s905x3-ugoosx3
@@ -189,6 +192,8 @@ on:
           - wocyber-a3
           - wxy-oect
           - wxy-oect-mod
+          - x88pro20
+          - x98h
           - xiaobao
           - yskj
           - zcube1-max
