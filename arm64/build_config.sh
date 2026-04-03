@@ -1035,6 +1035,7 @@ PACKAGES="$PACKAGES xz"
 PACKAGES="$PACKAGES xz-utils"
 PACKAGES="$PACKAGES zlib"
 PACKAGES="$PACKAGES zram-swap"
+PACKAGES="$PACKAGES kmod-xdp-sockets-diag"
 
 # 固件构建必要
 PACKAGES="$PACKAGES -libustream-mbedtls perlbase-time"
