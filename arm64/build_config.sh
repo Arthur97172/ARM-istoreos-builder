@@ -43,7 +43,6 @@ PACKAGES="$PACKAGES kmod-brcmfmac"
 PACKAGES="$PACKAGES brcmfmac-firmware-usb"
 PACKAGES="$PACKAGES brcmfmac-firmware-43430-sdio"
 PACKAGES="$PACKAGES brcmfmac-firmware-43455-sdio"
-PACKAGES="$PACKAGES brcmfmac-board-43430-sdio" 
 # --- Broadcom WiFi Support Start ---
 
 PACKAGES="$PACKAGES appfilter"
