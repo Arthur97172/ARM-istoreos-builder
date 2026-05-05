@@ -40,6 +40,7 @@ PACKAGES=""
 # --- Broadcom WiFi Support Start ---
 # 核心驱动 (FullMAC 驱动，兼容性最广)
 PACKAGES="$PACKAGES kmod-brcmfmac"
+PACKAGES="$PACKAGES kmod-brcmsmac"
 PACKAGES="$PACKAGES brcmfmac-firmware-usb"
 PACKAGES="$PACKAGES brcmfmac-firmware-43430-sdio"
 PACKAGES="$PACKAGES brcmfmac-firmware-43455-sdio"
