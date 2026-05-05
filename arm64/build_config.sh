@@ -37,6 +37,15 @@ PACKAGES=""
 # iStoreOS官方集成列表，若启用则打开注释
 #PACKAGES="$PACKAGES adb"
 #PACKAGES="$PACKAGES adb-enablemodem"
+# --- Broadcom WiFi Support Start ---
+# 核心驱动 (FullMAC 驱动，兼容性最广)
+PACKAGES="$PACKAGES kmod-brcmfmac"
+PACKAGES="$PACKAGES brcmfmac-firmware-usb"
+PACKAGES="$PACKAGES brcmfmac-firmware-43430-sdio"
+PACKAGES="$PACKAGES brcmfmac-firmware-43455-sdio"
+PACKAGES="$PACKAGES brcmfmac-board-43430-sdio" 
+# --- Broadcom WiFi Support Start ---
+
 PACKAGES="$PACKAGES appfilter"
 PACKAGES="$PACKAGES attr"
 PACKAGES="$PACKAGES avahi-dbus-daemon"
