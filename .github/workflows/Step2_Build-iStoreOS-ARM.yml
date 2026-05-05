@@ -214,7 +214,7 @@ on:
       luci_version:
         description: "选择luci版本"
         required: true
-        default: "24.10.5"
+        default: "24.10.6"
         type: choice
         options:
           - '24.10.0'
@@ -222,7 +222,8 @@ on:
           - '24.10.2'
           - '24.10.3'
           - '24.10.4'      
-          - '24.10.5'             
+          - '24.10.5'      
+          - '24.10.6'               
       auto_kernel:
         description: "自动使用最新内核-未匹配则自动"
         required: false
