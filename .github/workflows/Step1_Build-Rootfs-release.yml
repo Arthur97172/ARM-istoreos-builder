@@ -10,6 +10,10 @@ on:
         type: choice
         options:
           - 'latest'
+          - '20260605'    
+          - '20260417'         
+          - '20260410'           
+          - '20260403'        
           - '20260320' 
           - '20251231'          
           - '20251226'          
@@ -19,7 +23,7 @@ on:
       luci_version:
         description: "选择luci版本"
         required: true
-        default: "24.10.6"
+        default: "24.10.7"
         type: choice
         options:
           - '24.10.0'
@@ -29,6 +33,7 @@ on:
           - '24.10.4' 
           - '24.10.5' 
           - '24.10.6'
+          - '24.10.7'         
       network_settings:
         description: "请选择初始网络配置"
         required: true
