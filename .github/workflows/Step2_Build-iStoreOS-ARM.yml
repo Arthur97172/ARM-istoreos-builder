@@ -29,6 +29,7 @@ on:
           - crrc
           - dc-a588
           - dg3399
+          - dg-nas-lite
           - dg-tn3568
           - dlfr100
           - e20c
@@ -73,6 +74,7 @@ on:
           - lz-d3568
           - lz-d3588
           - lz-k3568
+          - md1000
           - mrkaio-m68s
           - nanopc-t4
           - nanopc-t6
@@ -93,6 +95,7 @@ on:
           - r68s
           - renegade-rk3328
           - rk3318-box
+          - roceos-k40pro
           - rock-5-itx
           - rock-3b
           - rock-3c
