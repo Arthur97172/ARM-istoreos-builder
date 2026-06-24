@@ -51,7 +51,7 @@ on:
         default: '192.168.10.1'
 
 env:
-  VERSION: ${{ inputs.luci_version }}
+  VERSION: ${{ inputs.build_version }}
 
 jobs:
   build:
