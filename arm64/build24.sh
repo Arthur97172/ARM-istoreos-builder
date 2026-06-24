@@ -39,10 +39,6 @@ else
   sh prepare-packages.sh
   echo "打印imagebuilder/packages目录结构"
   ls -lah packages/ |grep partexp
-  # 添加架构优先级信息
-  sed -i '1i\
-  arch aarch64_generic 10\n\
-  arch aarch64_cortex-a53 15' repositories.conf
 fi
 
 # 输出调试信息
