@@ -1,4 +1,4 @@
-name: 💿 Step1_Build-Rootfs-release
+name: 💿 Step1_Build-Rootfs-release iStoreOS
 
 on:
   workflow_dispatch:
