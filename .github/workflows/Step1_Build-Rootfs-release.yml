@@ -67,7 +67,7 @@ jobs:
 
     - name: ⚙️ 设置可执行权限
       run: | 
-        chmod +x arm64/build24.sh
+        chmod +x arm64/build_config.sh
         chmod +x shell/*.sh
 
     - name: ⚙️ 设置IP、网关和版本号
@@ -143,7 +143,7 @@ jobs:
     - name: 🔄 复制并设置必备文件
       run: |
         # ⚠️ 确保这里复制了 repositories.conf
-        cp arm64/{build24.sh,Makefile} imagebuilder/
+        cp arm64/{build_config.sh,Makefile} imagebuilder/
         # 如果你的 repositories.conf 在根目录或 arm64 目录下，请确保路径正确
         [ -f "repositories.conf" ] && cp repositories.conf imagebuilder/ || cp arm64/repositories.conf imagebuilder/
         
@@ -171,53 +171,36 @@ jobs:
         BASE_URL="https://downloads.openwrt.org/releases/${BUILD_VER}/targets/armsr/armv8/kmods/"
         
         echo "正在从 $BASE_URL 获取最新的内核哈希..."
-        
-        # 优化正则：支持匹配各种格式的哈希文件夹（带 / 结尾的链接）
-        KMOD_DIR=$(curl -sL "$BASE_URL" | grep -oE '[0-9a-f]{32}|[0-9.-]+-[a-f0-9]{32}' | head -n 1)
-        
-        if [ -z "$KMOD_DIR" ]; then
-          # 备用方案：如果上面没匹配到，尝试直接抓取整段 a 标签中的目录名
-          KMOD_DIR=$(curl -sL "$BASE_URL" | grep -oE 'href="[^"]+/"' | grep -v '\.\./' | sed 's/href="//;s/\/"//' | head -n 1)
-        fi
+        KMOD_DIR=$(curl -sL $BASE_URL | grep -oE "[0-9.-]+-[a-f0-9]{32}" | head -n 1)
         
         if [ -n "$KMOD_DIR" ]; then
-          # 确保去掉可能残余的斜杠，重新拼接
-          KMOD_DIR=$(echo "$KMOD_DIR" | tr -d '/')
-          FULL_KMOD_URL="${BASE_URL}${KMOD_DIR}/"
+          FULL_KMOD_URL="${BASE_URL}${KMOD_DIR}"
           echo "✅ 成功匹配 kmods 路径: $FULL_KMOD_URL"
           
-          # 明确指定绝对/相对根目录路径，防止混淆
-          TARGET_CONF="${GITHUB_WORKSPACE}/imagebuilder/repositories.conf"
-          
+          # 1. 检查文件是否存在
+          TARGET_CONF="imagebuilder/repositories.conf"
           if [ ! -f "$TARGET_CONF" ]; then
-            echo "❌ 错误: $TARGET_CONF 不存在，请检查 '复制必备文件' 步骤中是否成功生成了该文件"
-            ls -la "${GITHUB_WORKSPACE}/imagebuilder/" # 打印出来方便排查
+            echo "❌ 错误: $TARGET_CONF 不存在，请检查 '复制必备文件' 步骤"
             exit 1
           fi
 
-          # 2. 替换版本号
+          # 2. 替换版本号 (支持占位符 VERSION_PLACEHOLDER 或硬编码的 24.10.4)
           sed -i "s|VERSION_PLACEHOLDER|${BUILD_VER}|g" "$TARGET_CONF"
           sed -i "s|24.10.4|${BUILD_VER}|g" "$TARGET_CONF"
           
-          # 3. 替换 Kmod 整行
-          # 先检查文件中是否存在 openwrt_kmods 标记
-          if grep -q "openwrt_kmods" "$TARGET_CONF"; then
-            sed -i "s|^src/gz openwrt_kmods.*|src/gz openwrt_kmods $FULL_KMOD_URL|g" "$TARGET_CONF"
-          else
-            # 如果不存在该行，则直接追加到文件末尾
-            echo "src/gz openwrt_kmods $FULL_KMOD_URL" >> "$TARGET_CONF"
-          fi
+          # 3. 替换 Kmod 整行 (最稳妥：直接匹配包含 openwrt_kmods 的行并重写)
+          sed -i "s|^src/gz openwrt_kmods.*|src/gz openwrt_kmods $FULL_KMOD_URL|g" "$TARGET_CONF"
           
           echo "--- 更新后的配置文件内容 (预览) ---"
           cat "$TARGET_CONF"
         else
-          echo "❌ 无法获取 Kmod 哈希，请检查官方源是否存在该版本，或检查网络: $BASE_URL"
+          echo "❌ 无法获取 Kmod 哈希，请检查官方源是否存在该版本: $BASE_URL"
           exit 1
         fi
 
     - name: 🧱 构建iStoreOS-rootfs
       working-directory: ./imagebuilder
-      run: bash ./build24.sh
+      run: bash ./build_config.sh
 
     - name: 🚀 上传到 Release
       uses: softprops/action-gh-release@v2.2.1
