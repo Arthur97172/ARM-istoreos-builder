@@ -103,9 +103,8 @@ jobs:
         sudo apt-get install -y build-essential libncurses5-dev zstd curl unzip tree
 
     - name: ⏬ 下载 ImageBuilder
-     # 必须在这里添加这个 env 块
-        run: |
-         BUILD_VER="${{ env.VERSION }}"
+      run: |
+         BUILD_VER="${{ inputs.build_version }}"
          URL="https://downloads.immortalwrt.org/releases/${BUILD_VER}/targets/armsr/armv8/immortalwrt-imagebuilder-${BUILD_VER}-armsr-armv8.Linux-x86_64.tar.zst"
          curl -Lf -o imagebuilder.tar.zst "$URL"
          tar --use-compress-program=unzstd -xvf imagebuilder.tar.zst
