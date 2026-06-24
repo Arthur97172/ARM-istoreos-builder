@@ -3,23 +3,6 @@ name: 💿 Step1_Build-Rootfs-release-Immortalwrt
 on:
   workflow_dispatch:
     inputs:
-      build_version:
-        description: "请选择构建版本 (latest 为官网最新)"
-        required: true
-        default: 'latest'
-        type: choice
-        options:
-          - 'latest'
-          - '20260605'    
-          - '20260417'         
-          - '20260410'           
-          - '20260403'        
-          - '20260320' 
-          - '20251231'          
-          - '20251226'          
-          - '20251205'
-          - '20251128'
-          - '20251121'
       luci_version:
         description: "选择luci版本"
         required: true
@@ -51,7 +34,7 @@ on:
         default: '192.168.10.1'
 
 env:
-  VERSION: ${{ inputs.build_version }}
+  VERSION: ${{ inputs.luci_version }}
 
 jobs:
   build:
@@ -104,7 +87,7 @@ jobs:
 
     - name: ⏬ 下载 ImageBuilder
       run: |
-         BUILD_VER="${{ inputs.build_version }}"
+         BUILD_VER="${{ inputs.luci_version }}"
          URL="https://downloads.immortalwrt.org/releases/${BUILD_VER}/targets/armsr/armv8/immortalwrt-imagebuilder-${BUILD_VER}-armsr-armv8.Linux-x86_64.tar.zst"
          curl -Lf -o imagebuilder.tar.zst "$URL"
          tar --use-compress-program=unzstd -xvf imagebuilder.tar.zst
