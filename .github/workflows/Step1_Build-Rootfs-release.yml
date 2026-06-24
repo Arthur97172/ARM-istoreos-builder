@@ -67,7 +67,7 @@ jobs:
 
     - name: ⚙️ 设置可执行权限
       run: | 
-        chmod +x arm64/buil24.sh
+        chmod +x arm64/build24.sh
         chmod +x shell/*.sh
 
     - name: ⚙️ 设置IP、网关和版本号
