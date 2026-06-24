@@ -49,7 +49,7 @@ jobs:
 
     - name: ⚙️ 设置可执行权限
       run: | 
-        chmod +x arm64/build24.sh
+        chmod +x arm64/imm_build24.sh
         chmod +x shell/*.sh
 
     - name: ⚙️ 设置IP、网关和版本号
@@ -96,7 +96,7 @@ jobs:
     - name: 🔄 复制并设置必备文件
       run: |
         # ⚠️ 确保这里复制了 repositories.conf
-        cp arm64/{build24.sh,Makefile} imagebuilder/
+        cp arm64/{imm_build24.sh,Makefile} imagebuilder/
         # 如果你的 repositories.conf 在根目录或 arm64 目录下，请确保路径正确
         [ -f "repositories.conf" ] && cp repositories.conf imagebuilder/ || cp arm64/repositories.conf imagebuilder/
         
@@ -153,7 +153,7 @@ jobs:
 
     - name: 🧱 构建Immortalwrt-rootfs
       working-directory: ./imagebuilder
-      run: bash ./build24.sh
+      run: bash ./imm_build24.sh
 
     - name: 🚀 上传到 Release
       uses: softprops/action-gh-release@v2.2.1
