@@ -5,17 +5,33 @@ echo "第三方软件包: $CUSTOM_PACKAGES"
 LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 
+#查询是否包含第三方软件包
 if [ -z "$CUSTOM_PACKAGES" ]; then
   echo "⚪️ 未选择 任何第三方软件包"
 else
   # ============= 同步第三方插件库==============
   # 同步第三方软件仓库run/ipk
   echo "🔄 正在同步第三方软件仓库 Cloning run file repo..."
-  git clone --depth=1 https://github.com/wukongdaily/store.git /tmp/store-run-repo
+  # 增加超时和重试机制
+  rm -rf /tmp/store-run-repo 2>/dev/null
+  if ! git clone --depth=1 https://github.com/Arthur97172/OpenWrt-App.git /tmp/store-run-repo; then
+      echo "❌ git clone 失败！请检查网络或仓库是否可用"
+      exit 1
+  fi
 
-  # 拷贝 run/arm64 下所有 run 文件和ipk文件 到 extra-packages 目录
+  # === 验证克隆结果 ===
+  echo "✅ git clone 完成，开始验证..."
+  if [ ! -d "/tmp/store-run-repo" ]; then
+      echo "❌ 仓库目录不存在，克隆失败"
+      exit 1
+  fi
+
+  echo "📁 仓库目录结构："
+  ls -la /tmp/store-run-repo/
+
+  # 拷贝 arm64 下所有 ipk 文件到 extra-packages 目录
   mkdir -p extra-packages
-  cp -r /tmp/store-run-repo/run/arm64/* extra-packages/
+  cp -r /tmp/store-run-repo/ipk/{aarch64_generic,aarch64_cortex-a53}/* extra-packages/ 2>/dev/null || true
 
   echo "✅ Run files copied to extra-packages:"
   ls -lh extra-packages/*.run
@@ -23,6 +39,10 @@ else
   sh prepare-packages.sh
   echo "打印imagebuilder/packages目录结构"
   ls -lah packages/ |grep partexp
+  # 添加架构优先级信息
+  sed -i '1i\
+  arch aarch64_generic 10\n\
+  arch aarch64_cortex-a53 15' repositories.conf
 fi
 
 # 输出调试信息
