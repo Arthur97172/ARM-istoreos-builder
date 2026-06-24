@@ -268,7 +268,7 @@ on:
       system_version:
         description: "选择系统版本"
         required: true
-        default: "Immortalwrt"
+        default: "iStoreOS"
         type: choice
         options:
           - 'Immortalwrt'
