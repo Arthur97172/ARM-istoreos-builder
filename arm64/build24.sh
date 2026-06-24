@@ -39,6 +39,10 @@ else
   sh prepare-packages.sh
   echo "打印imagebuilder/packages目录结构"
   ls -lah packages/ |grep partexp
+  # 添加架构优先级信息
+  sed -i '1i\
+  arch aarch64_generic 10\n\
+  arch aarch64_cortex-a53 15' repositories.conf
 fi
 
 # 输出调试信息
@@ -1071,11 +1075,6 @@ PACKAGES="$PACKAGES -libustream-mbedtls perlbase-time"
 # file/packages目录的第三方可选插件，需要则去掉注释即可
 PACKAGES="$PACKAGES luci-app-amlogic luci-i18n-amlogic-zh-cn"
 PACKAGES="$PACKAGES luci-app-ramfree luci-i18n-ramfree-zh-cn"
-PACKAGES="$PACKAGES lucky luci-app-lucky luci-i18n-lucky-zh-cn"
-PACKAGES="$PACKAGES luci-app-adguardhome luci-i18n-adguardhome-zh-cn"
-PACKAGES="$PACKAGES openlist2 luci-app-openlist2 luci-i18n-openlist2-zh-cn"
-PACKAGES="$PACKAGES filebrowser luci-app-filebrowser-go luci-i18n-filebrowser-go-zh-cn"
-PACKAGES="$PACKAGES luci-app-poweroffdevice luci-i18n-poweroffdevice-zh-cn"
 
 # 追加自定义包
 PACKAGES="$PACKAGES $CUSTOM_PACKAGES"
