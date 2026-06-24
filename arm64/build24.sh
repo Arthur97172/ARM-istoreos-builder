@@ -1074,6 +1074,13 @@ PACKAGES="$PACKAGES -libustream-mbedtls perlbase-time"
 # N1无线：此固件未考虑无线，需自行研究
 #PACKAGES="$PACKAGES kmod-brcmfmac wpad-basic-mbedtls"
 
+# file/packages目录的第三方可选插件，需要则去掉注释即可
+PACKAGES="$PACKAGES luci-app-amlogic luci-i18n-amlogic-zh-cn"
+PACKAGES="$PACKAGES luci-app-ramfree luci-i18n-ramfree-zh-cn"
+PACKAGES="$PACKAGES lucky luci-app-lucky luci-i18n-lucky-zh-cn"
+PACKAGES="$PACKAGES luci-app-adguardhome luci-i18n-adguardhome-zh-cn"
+PACKAGES="$PACKAGES openlist2 luci-app-openlist2 luci-i18n-openlist2-zh-cn"
+
 # 追加自定义包
 PACKAGES="$PACKAGES $CUSTOM_PACKAGES"
 
