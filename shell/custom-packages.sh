@@ -1,31 +1,48 @@
 #!/bin/bash
-# ============= iStoreOS 24.10 仓库外的第三方插件==============
-# ============= 若启用 则打开注释 ============================
+# 24.10.x 第三方插件配置 (IPK 格式) - x86-64 专用
+# 启用第三方插件时取消对应注释
 
-# 分区扩容 by sirpdboy 
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-partexp"
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-i18n-partexp-zh-cn"
-# 酷猫主题 by sirpdboy 
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-theme-kucat"
-# 进阶设置 by sirpdboy 
-# 当luci-app-advancedplus插件开启时 需排除冲突项 luci-app-argon-config和luci-i18n-argon-config-zh-cn 减号代表排除
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-advancedplus -luci-app-argon-config"
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-i18n-advancedplus-zh-cn -luci-i18n-argon-config-zh-cn"
-# 网络测速 by sirpdboy 
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-netspeedtest"
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-i18n-netspeedtest-zh-cn"
-# MosDNS
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-mosdns"
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-i18n-mosdns-zh-cn"
-# 应用过滤 openappfilter.com
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-appfilter"
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-i18n-appfilter-zh-cn"
-# 设置向导 by sirpdboy
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-netwizard"
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-i18n-netwizard-zh-cn"
+# argon主题 (argon)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-argon-config luci-theme-argon luci-i18n-argon-config-zh-cn"
 
-# ============= 若去除组件 则打开注释 ============================
-# 若去掉istore商店 则打开注释
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES -luci-app-store"
-# 若去掉首页和网络向导 则打开注释
-#CUSTOM_PACKAGES="$CUSTOM_PACKAGES -luci-i18n-quickstart-zh-cn"
+# aurora主题 (aurora)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-aurora-config luci-theme-aurora luci-i18n-aurora-config-zh-cn"
+
+# 网络流量监控 (bandix)
+#CUSTOM_PACKAGES="$CUSTOM_PACKAGES bandix luci-app-bandix luci-i18n-bandix-zh-cn"
+
+# 网络流量监控 (bandix-plus)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES bandix-plus luci-app-bandix-plus luci-i18n-bandix-plus-zh-cn"
+
+# clashoo代理面板 (clashoo)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES clashoo luci-app-clashoo luci-i18n-clashoo-zh-cn"
+
+# daede代理面板 (daede)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES dae daed luci-app-daede"
+
+# DNS转发器 (MosDNS)
+USTOM_PACKAGES="$CUSTOM_PACKAGES mosdns luci-app-mosdns luci-i18n-mosdns-zh-cn"
+
+# 网络设置向导 (netwizard)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-netwizard luci-i18n-netwizard-zh-cn"
+
+# nikki代理面板 (nikki)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES nikki luci-app-nikki luci-i18n-nikki-zh-cn"
+
+# openclash代理面板 (openclash)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-openclash"
+
+# 分区扩容 (partexp)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-partexp luci-i18n-partexp-zh-cn"
+
+# passwall代理面板 (passwall)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-passwall luci-i18n-passwall-zh-cn"
+
+# 关机 (poweroffdevice)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-poweroffdevice luci-i18n-poweroffdevice-zh-cn"
+
+# 文件管理器 (quickfile)
+#CUSTOM_PACKAGES="$CUSTOM_PACKAGES quickfile luci-app-quickfile luci-i18n-quickfile-zh-cn"
+
+# VPN代理 (tailscale)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES tailscale luci-app-tailscale luci-i18n-tailscale-zh-cn"
