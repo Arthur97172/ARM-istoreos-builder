@@ -61,7 +61,7 @@
 | s905     | Beelink-Mini-MX-2G, Sunvell-T95M, MXQ-Pro+4K, SumaVision-Q5 |
 | rk3588(s)| Radxa-Rock5B, Radxa-Rock5C, Orange-Pi-5-Plus, Beelink-IPC-R, HLink-H88K, HLink-H88K-V3, NanoPC-T6, Smart-Am60, DC-A588, Orangepi-5B, CM3588-NAS, Rock-5-ITX, LZ-D3588, Boca-tcn100, Firefly-ITX-3588J, Indiedroid-Nova, LubanCat-4, Orange-Pi-5-Pro, Seewo-SV50, EasePi-R2 |
 | rk3576   | NanoPi-m5, LCKFB-Taishan-Pi-3M |
-| rk3399   | EAIDK-610, King3399, TN3399, Kylin3399, ZCube1-Max, CRRC, SMART-AM40, SW799, ZYSJ, DG-3399, DLFR100, Emb3531, Leez-p710, tvi3315a, xiaobao, Fine3399, Firefly-RK3399, LX-R3S, Hugsun-x99, Tb-ls3399, Hisense-hs530r, Tpm312, ZK-rk39a, YSKJ, Fmx1-Pro, Sv-33a6x, AIO-3399b, AIO-3399c, TaraM, NanoPC-T4, Firefly-Core-3399-JD4, GEA-6319 |
+| rk3399   | EAIDK-610, King3399, TN3399, Kylin3399, ZCube1-Max, CRRC, SMART-AM40, SW799, ZYSJ, DG-3399, DLFR100, Emb3531, Leez-p710, tvi3315a, xiaobao, Fine3399, Firefly-RK3399, LX-R3S, Hugsun-x99, Tb-ls3399, Hisense-hs530r, Tpm312, ZK-rk39a, YSKJ, Fmx1-Pro, Sv-33a6x, AIO-3399b, AIO-3399c, TaraM, NanoPC-T4, Firefly-Core-3399-JD4, GEA-6319, NanoPi-SOM-RK3399 |
 | rk3568   | FastRhino-R66S, FastRhino-R68S, Radxa-E25, NanoPi-R5S, NanoPi-R5C, HLink-H66K, HLink-H68K, HLink-H69K, Seewo-sv21, Mrkaio-m68s, Swan1-w28, Ruisen-box, DG-TN3568, Alark35-3500, MMBox-Anas3035, Wocyber-A3, Photonicat, NSY-G68-Plus, NSY-G68-Plus, BDY-G18-Pro, Gzpeite-P01, LZ-K3568, BDKJ-One, Station-P2, Lyt-t68m, LubanCat-2, Rock-3B, EasePi-A2, Roceos-K40Pro, DG-Nas-Lite |
 | rk3566   | Panther-X2, JP-TvBox, LCKFB-Taishan-Pi, WXY-OEC-turbo-4g, Station-M2, Orange-Pi-3B, X88Pro20, LubanCat-1, Rock-3C, Inspur-MD1000 |
 | rk3528   | HLink-H28K, Radxa-E20C, H96-Max-M2, HK1-Rbox-K8S, HT2, CD1000 |
