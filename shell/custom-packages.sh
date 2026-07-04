@@ -2,6 +2,10 @@
 # 24.10.x 第三方插件配置 (IPK 格式) - aarch64_generic 专用
 # 启用第三方插件时取消对应注释
 
+
+#晶晨宝盒 (amlogic)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-amlogic luci-i18n-amlogic-zh-cn"
+
 # argon主题 (argon)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-argon-config luci-theme-argon luci-i18n-argon-config-zh-cn"
 
