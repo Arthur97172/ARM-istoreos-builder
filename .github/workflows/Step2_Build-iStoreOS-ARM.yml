@@ -278,11 +278,20 @@ on:
         type: choice
         options:
           - 'iStoreOS'
+      include_docker:
+        description: "是否集成 Docker 插件"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
 
 env:
   VERSION: ${{ inputs.luci_version }}
   SYSTEMVERSION: ${{ inputs.system_version }}
-
+  DOCKER: ${{ inputs.include_docker }}
+  
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -337,7 +346,7 @@ jobs:
       - name: 🚀 上传到 Release
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: ${{ env.SYSTEMVERSION }}-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}-${{ inputs.network_settings }}
+          tag_name: ${{ env.SYSTEMVERSION }}-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}-${{ inputs.network_settings }}-Docker-${{ env.DOCKER }}
           files: |
             ${{ env.PACKAGED_OUTPUTPATH }}/*.img.gz
         env:
