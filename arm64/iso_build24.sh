@@ -3,6 +3,7 @@
 source custom-packages.sh
 echo "第三方软件包: $CUSTOM_PACKAGES"
 LOGFILE="/tmp/uci-defaults-log.txt"
+echo "Include Docker: $INCLUDE_DOCKER"
 echo "Starting 99-custom.sh at $(date)" >> $LOGFILE
 
 #查询是否包含第三方软件包
@@ -1080,6 +1081,12 @@ PACKAGES="$PACKAGES luci-app-ramfree luci-i18n-ramfree-zh-cn"
 
 # 追加自定义包
 PACKAGES="$PACKAGES $CUSTOM_PACKAGES"
+
+# [Docker 插件]
+if [ "$INCLUDE_DOCKER" = "yes" ]; then
+    echo "🐳 Docker enabled, adding docker packages"
+    PACKAGES="$PACKAGES docker docker-compose luci-app-dockerman luci-i18n-dockerman-zh-cn"
+fi
 
 # 构建镜像
 echo "开始构建......打印所有包名===="
