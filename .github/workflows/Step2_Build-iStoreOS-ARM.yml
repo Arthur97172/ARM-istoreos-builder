@@ -277,7 +277,6 @@ on:
         default: "iStoreOS"
         type: choice
         options:
-          - 'Immortalwrt'
           - 'iStoreOS'
 
 env:
