@@ -43,7 +43,7 @@ on:
           - 'static'
           - 'dhcp'
       ipaddr:
-        description: '请输入管理IP'
+        description: "请设置软路由的管理地址,格式:192.168.x.1"
         required: true
         default: '192.168.10.1'
       gateway:
