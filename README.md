@@ -39,6 +39,7 @@
 | Passwall              |  ✅   | N/A                    |  ⏳     | N/A            | ⭕       |
 
 ✅ 支持 - ⏳ 计划中 - ⭕ 不支持
+
 用户可根据自己需要对/shell/custom-packages.sh文件进行调节
 
 </div>
