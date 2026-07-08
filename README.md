@@ -31,10 +31,10 @@
 
 | 插件                     | 状态 | 插件                     | 状态  | 插件                    | 状态   |
 |:------------------------:|:----:|:------------------------:|:-----:|:------------------------:|:------:|
-| Famfree          | ✅   | Luci-app-amlogic         | ✅    | FileBrowser    |  ✅     |
+| Famfree          | ✅   | Luci-app-amlogic         | ✅    | daede    |  ✅     |
 | Adguardhome              |  ✅   | Lucky                    |  ✅     | Openlist2                | ✅      |
+| Poweroff              |  ✅   | clashoo                   |  ✅     | openclash            | ✅       |
 | Poweroff              |  ✅   | N/A                    |  ⏳     | N/A            | ⭕       |
-
 
 ✅ 支持 - ⏳ 计划中 - ⭕ 不支持
 
