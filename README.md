@@ -36,7 +36,7 @@
 | MosDNS              |  ✅   | Netwizard                   |  ✅     | Nikki            | ✅       |
 | Openclash              |  ✅   | Partexp                    |  ✅     | Poweroffdevice           | ✅       |
 | Rtp2httpd              |  ✅   | Tailscale                    |  ✅      | Taskplan           | ✅        |
-| Passwall              |  ✅   | N/A                    |  ⏳     | N/A            | ⭕       |
+| Passwall              |  ✅   | Run                   |  ✅      | N/A            | ⭕       |
 
 ✅ 支持 - ⏳ 计划中 - ⭕ 不支持
 
