@@ -61,6 +61,7 @@ on:
 
 env:
   VERSION: ${{ inputs.luci_version }}
+  DOCKER: ${{ inputs.include_docker }}
 
 jobs:
   build:
