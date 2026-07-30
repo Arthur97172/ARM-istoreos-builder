@@ -338,7 +338,7 @@ jobs:
           for FILE in ${{ env.PACKAGED_OUTPUTPATH }}/*.img.gz; do
             echo "Processing file: $FILE"
             FILENAME=$(basename "$FILE")
-            NEW_FILENAME=$(echo "$FILENAME" | sed 's/openwrt/istoreos_${{ env.VERSION }}/g')
+            NEW_FILENAME=$(echo "$FILENAME" | sed 's/openwrt/iStoreOS_${{ env.VERSION }}-Docker-${{ env.DOCKER }}/g')
             if [ "$FILENAME" != "$NEW_FILENAME" ]; then
               mv "$FILE" "${{ env.PACKAGED_OUTPUTPATH }}/$NEW_FILENAME"
               echo "Renamed $FILENAME to $NEW_FILENAME"
@@ -355,7 +355,7 @@ jobs:
       - name: 🚀 上传到 Release
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: ${{ steps.date.outputs.date }}-${{ env.SYSTEMVERSION }}-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}-${{ inputs.network_settings }}-Docker-${{ env.DOCKER }}
+          tag_name: ${{ env.SYSTEMVERSION }}-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}-${{ inputs.network_settings }}
           files: |
             ${{ env.PACKAGED_OUTPUTPATH }}/*.img.gz
         env:
