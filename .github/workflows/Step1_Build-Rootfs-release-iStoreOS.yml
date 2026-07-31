@@ -65,7 +65,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     # 关键：添加写入权限，解决 403 报错
     permissions:
       contents: write
@@ -110,7 +110,7 @@ jobs:
     - name: 🛠️ 安装依赖
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential libncurses5-dev zstd curl unzip tree
+        sudo apt-get install -y build-essential libncurses5-dev libncursesw5-dev zstd curl unzip tree qemu-utils genisoimage
 
     - name: ⏬ 下载 ImageBuilder
      # 必须在这里添加这个 env 块
@@ -230,8 +230,8 @@ jobs:
         body: |
           📡 ------------------------------路由器后台信息------------------------------
          
-          📌 版本： ${{ env.FINAL_WRT }}-ARM-${{ env.FINAL_LUCI_VER }}
-          🧠 内核： Please Login to → ${{ env.FINAL_WRT }} → System → Amlogic Service → Replace the Kernel
+          📌 版本： iStoreOS-ARM-${{ env.VERSION }}
+          🧠 内核： Please Login to iStoreOS → System → Amlogic Service → Replace the Kernel
          
           🧩 集成： 包含了基础系统组件、驱动、网络工具、容器支持、LuCI界面及插件等
          
