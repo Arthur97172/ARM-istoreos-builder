@@ -37,7 +37,7 @@ on:
       network_settings:
         description: "请选择初始网络配置"
         required: true
-        default: 'static'
+        default: 'dhcp'
         type: choice
         options:
           - 'static'
