@@ -18,6 +18,7 @@ on:
           - aio-3399c-ai
           - bdkj-bd-one
           - bdy-g18-pro
+          - bdy-g98
           - beikeyun
           - boca-tcn100
           - boca-tcn200
@@ -68,6 +69,7 @@ on:
           - leez
           - lubancat-1
           - lubancat-2
+          - lubancat-3
           - lubancat-4
           - lx-r3s
           - lyt-t68m
@@ -81,6 +83,7 @@ on:
           - nanopi-m5
           - nanopi-r5c
           - nanopi-r5s
+          - nanopi-som
           - nsy-g16-plus
           - nsy-g68-plus
           - orangepi-3b
@@ -94,6 +97,7 @@ on:
           - photonicat
           - r66s
           - r68s
+          - recomputer-rk3576-devkit
           - renegade-rk3328
           - rk3318-box
           - roceos-k40pro
@@ -213,6 +217,7 @@ on:
           - wocyber-a3
           - wxy-oect
           - wxy-oect-mod
+          - x88pro13
           - x88pro20
           - x98h
           - xiaobao
