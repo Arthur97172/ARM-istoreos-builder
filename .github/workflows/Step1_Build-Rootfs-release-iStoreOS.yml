@@ -211,27 +211,36 @@ jobs:
       working-directory: ./imagebuilder
       run: bash ./iso_build24.sh
 
+    - name: 📝 重命名 rootfs 文件
+      run: |
+        cd imagebuilder/bin/targets/armsr/armv8
+        for f in *generic-rootfs.tar.gz; do
+          if [ -f "$f" ]; then
+            newname="${f/-rootfs.tar.gz/-rootfs-Docker-${{ env.DOCKER }}.tar.gz}"
+            mv "$f" "$newname"
+            echo "已重命名: $f → $newname"
+          fi
+        done
+        ls -lh
+
     - name: 🚀 上传到 Release
       uses: softprops/action-gh-release@v2.2.1
       with:
         tag_name: iStoreOS-ARM-${{ env.VERSION }}-RELEASE-${{ inputs.network_settings }}
         body: |
-
           📡 ------------------------------路由器后台信息------------------------------
-          
-          📌 版本： iStoreOS-ARM-${{ env.VERSION }}
-
-          🧠 内核： Please Login to iStoreOS → System → Amlogic Service → Replace the Kernel
-          
+         
+          📌 版本： ${{ env.FINAL_WRT }}-ARM-${{ env.FINAL_LUCI_VER }}
+          🧠 内核： Please Login to → ${{ env.FINAL_WRT }} → System → Amlogic Service → Replace the Kernel
+         
           🧩 集成： 包含了基础系统组件、驱动、网络工具、容器支持、LuCI界面及插件等
-          
+         
           👤 用户名： root
-          
+         
           🔒 密码： 无
-          
+         
           🌐 初始IP： ${{ inputs.ipaddr }}
-
-          
-        files: imagebuilder/bin/targets/armsr/armv8/*generic-rootfs.tar.gz
+         
+        files: imagebuilder/bin/targets/armsr/armv8/*generic-rootfs-Docker-*.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
