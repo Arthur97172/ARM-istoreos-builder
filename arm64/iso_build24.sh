@@ -1082,14 +1082,44 @@ PACKAGES="$PACKAGES luci-app-ramfree luci-i18n-ramfree-zh-cn"
 # 追加自定义包
 PACKAGES="$PACKAGES $CUSTOM_PACKAGES"
 
+# ============================================
 # [Docker 插件]
 if [ "$INCLUDE_DOCKER" = "yes" ]; then
     echo "🐳 Docker enabled, adding docker packages"
     PACKAGES="$PACKAGES docker docker-compose luci-app-dockerman luci-i18n-dockerman-zh-cn"
 fi
 
+# 若构建openclash 则添加内核
+if echo "$PACKAGES" | grep -q "luci-app-openclash"; then
+    echo "✅ 已选择 luci-app-openclash，添加 openclash core"
+    mkdir -p files/etc/openclash/core
+    # Download clash_meta
+    META_URL="https://raw.githubusercontent.com/vernesong/OpenClash/core/master/meta/clash-linux-arm64.tar.gz"
+    wget -qO- $META_URL | tar xOvz > files/etc/openclash/core/clash_meta
+    chmod +x files/etc/openclash/core/clash_meta
+    # 下载 GeoIP and GeoSite 数据库
+    wget -q https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat -O files/etc/openclash/GeoIP.dat
+    wget -q https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat -O files/etc/openclash/GeoSite.dat
+    echo "✅ openclash预装GeoData 数据库完成！"
+else
+    echo "⚪️ 未选择 luci-app-openclash"
+fi
+
+# 若构建nikki 则添加GeoIP and GeoSite
+if echo "$PACKAGES" | grep -q "luci-app-nikki"; then
+    # 创建目录
+    mkdir -p files/etc/nikki/run/
+    # 下载 GeoIP and GeoSite 数据库
+    wget -q https://github.com/MetaCubeX/meta-rules-dat/releases/latest/download/geoip.dat -O files/etc/nikki/run/GeoIP.dat
+    wget -q https://github.com/MetaCubeX/meta-rules-dat/releases/latest/download/geosite.dat -O files/etc/nikki/run/GeoSite.dat
+    chmod 755 files/etc/nikki/run/*
+    echo "✅ nikki预装GeoData 数据库完成！"
+else
+    echo "⚪️ 未选择 luci-app-nikki"
+fi
+
 # 构建镜像
-echo "开始构建......打印所有包名===="
+echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建......打印所有包名"
 echo "$PACKAGES"
 
 # 开始构建
