@@ -277,13 +277,6 @@ on:
         options:
           - static
           - dhcp
-      system_version:
-        description: "选择系统版本"
-        required: true
-        default: "iStoreOS"
-        type: choice
-        options:
-          - 'iStoreOS'
       include_docker:
         description: "是否集成 Docker 插件"
         required: true
@@ -295,7 +288,6 @@ on:
 
 env:
   VERSION: ${{ inputs.luci_version }}
-  SYSTEMVERSION: ${{ inputs.system_version }}
   DOCKER: ${{ inputs.include_docker }}
   
 jobs:
@@ -327,7 +319,7 @@ jobs:
           fi
           echo "file=$ROOTFS_FILE" >> $GITHUB_OUTPUT
 
-      - name: 🧱 打包${{ inputs.system_version }}固件
+      - name: 🧱 打包 iStoreOS 固件
         uses: ophub/amlogic-s9xxx-openwrt@main
         with:
           openwrt_path: ${{ steps.find_rootfs.outputs.file }}
@@ -361,7 +353,7 @@ jobs:
       - name: 🚀 上传到 Release
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: ${{ env.SYSTEMVERSION }}-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}-${{ inputs.network_settings }}
+          tag_name: iStoreOS-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}-${{ inputs.network_settings }}
           files: |
             ${{ env.PACKAGED_OUTPUTPATH }}/*.img.gz
         env:
