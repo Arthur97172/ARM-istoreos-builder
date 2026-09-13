@@ -27,6 +27,9 @@ CUSTOM_PACKAGES="$CUSTOM_PACKAGES clashoo luci-app-clashoo luci-i18n-clashoo-zh-
 # daede代理面板 (daede)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES dae daed luci-app-daede"
 
+# Easymesh无线组网(easymesh)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-easymesh luci-i18n-easymesh-zh-cn"
+
 # lucky内网穿透 (lucky)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES lucky luci-app-lucky luci-i18n-lucky-zh-cn"
 
@@ -57,6 +60,9 @@ CUSTOM_PACKAGES="$CUSTOM_PACKAGES rtp2httpd luci-app-rtp2httpd luci-i18n-rtp2htt
 
 # run插件安装工具 (run)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-run"
+
+# Netspeedtest网速测试 (netspeedtest)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-netspeedtest luci-i18n-netspeedtest-zh-cn"
 
 # VPN代理 (tailscale)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES tailscale luci-app-tailscale luci-i18n-tailscale-zh-cn"
