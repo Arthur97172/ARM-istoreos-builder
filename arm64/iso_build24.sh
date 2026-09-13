@@ -775,7 +775,7 @@ PACKAGES="$PACKAGES libudebug"
 PACKAGES="$PACKAGES libudev-zero"
 PACKAGES="$PACKAGES liburing"
 PACKAGES="$PACKAGES libusb-1.0-0"
-PACKAGES="$PACKAGES libustream-mbedtls20201210"
+#PACKAGES="$PACKAGES libustream-mbedtls20201210"
 PACKAGES="$PACKAGES libuuid1"
 PACKAGES="$PACKAGES libuv1"
 PACKAGES="$PACKAGES libwebsockets-full"
@@ -1072,11 +1072,9 @@ PACKAGES="$PACKAGES xz-utils"
 PACKAGES="$PACKAGES zlib"
 PACKAGES="$PACKAGES zram-swap"
 PACKAGES="$PACKAGES kmod-xdp-sockets-diag"
-PACKAGES="$PACKAGES -libustream-mbedtls -libustream-wolfssl libustream-openssl"
-PACKAGES="$PACKAGES -wpad-basic-mbedtls -wpad-mbedtls -wpad-openssl wpad-mesh-openssl"
-
-# 固件构建必要
-PACKAGES="$PACKAGES -libustream-mbedtls perlbase-time"
+PACKAGES="$PACKAGES libustream-mbedtls"
+PACKAGES="$PACKAGES -wpad-basic-mbedtls -wpad-mbedtls wpad-openssl"
+PACKAGES="$PACKAGES perlbase-time"
 
 # file/packages目录的第三方可选插件，需要则去掉注释即可
 PACKAGES="$PACKAGES luci-app-amlogic luci-i18n-amlogic-zh-cn"
