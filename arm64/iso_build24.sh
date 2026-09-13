@@ -1072,12 +1072,11 @@ PACKAGES="$PACKAGES xz-utils"
 PACKAGES="$PACKAGES zlib"
 PACKAGES="$PACKAGES zram-swap"
 PACKAGES="$PACKAGES kmod-xdp-sockets-diag"
+PACKAGES="$PACKAGES -libustream-mbedtls -libustream-wolfssl libustream-openssl"
+PACKAGES="$PACKAGES -wpad-basic-mbedtls -wpad-mbedtls -wpad-openssl wpad-mesh-openssl"
 
 # 固件构建必要
 PACKAGES="$PACKAGES -libustream-mbedtls perlbase-time"
-
-# N1无线：此固件未考虑无线，需自行研究
-#PACKAGES="$PACKAGES kmod-brcmfmac wpad-basic-mbedtls"
 
 # file/packages目录的第三方可选插件，需要则去掉注释即可
 PACKAGES="$PACKAGES luci-app-amlogic luci-i18n-amlogic-zh-cn"
