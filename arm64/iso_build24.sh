@@ -1070,11 +1070,11 @@ PACKAGES="$PACKAGES xz-utils"
 PACKAGES="$PACKAGES zlib"
 PACKAGES="$PACKAGES zram-swap"
 PACKAGES="$PACKAGES kmod-xdp-sockets-diag"
+PACKAGES="$PACKAGES -libustream-mbedtls20201210"
 PACKAGES="$PACKAGES -libustream-mbedtls -libustream-wolfssl libustream-openssl"
 PACKAGES="$PACKAGES -wpad-basic-mbedtls -wpad-mbedtls -wpad-openssl wpad-mesh-openssl"
 PACKAGES="$PACKAGES -wpa-supplicant-openssl"
 PACKAGES="$PACKAGES perlbase-time"
-#PACKAGES="$PACKAGES libustream-mbedtls20201210"
 
 # file/packages目录的第三方可选插件，需要则去掉注释即可
 PACKAGES="$PACKAGES luci-app-amlogic luci-i18n-amlogic-zh-cn"
