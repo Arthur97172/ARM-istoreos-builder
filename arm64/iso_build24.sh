@@ -1139,6 +1139,119 @@ else
     echo "⚪️ 未选择 luci-app-nikki"
 fi
 
+
+# 若构建 luci-app-netspeedtest，则自动预装最新稳定版 Ookla Speedtest CLI
+if echo "$PACKAGES" | grep -q "luci-app-netspeedtest"; then
+    echo "🚀 检测到 luci-app-netspeedtest，开始下载最新稳定版 Ookla Speedtest CLI..."
+    # 创建目标目录
+    mkdir -p files/usr/libexec/netspeedtest
+    # Airoha / AN7581 使用 ARM64
+    OOKLA_ARCH="aarch64"
+    # 创建临时目录
+    rm -rf /tmp/ookla-speedtest
+    mkdir -p /tmp/ookla-speedtest
+    # ------------------------------------------------------------
+    # 从 Ookla 官方 CLI 页面获取最新稳定版 aarch64 下载地址
+    # ------------------------------------------------------------
+    OOKLA_URL=$(wget -qO- --no-check-certificate \
+        "https://www.speedtest.net/apps/cli" \
+        | sed -n '/Download for Linux/,/<\/div>/p' \
+        | sed -En "s|.*<a href=\"([^\"]+)\"[^>]*>${OOKLA_ARCH}</a>.*|\1|p" \
+        | head -n 1)
+    # 如果没有找到 URL，尝试兼容其他 HTML 格式
+    if [ -z "$OOKLA_URL" ]; then
+        OOKLA_URL=$(wget -qO- --no-check-certificate \
+            "https://www.speedtest.net/apps/cli" \
+            | grep -oE 'https?://[^"]+linux-aarch64[^"]+\.tgz' \
+            | head -n 1)
+    fi
+    # 检查下载地址
+    if [ -z "$OOKLA_URL" ]; then
+        echo "❌ 无法从 Ookla 官方页面获取最新稳定版 aarch64 下载地址！"
+        rm -rf /tmp/ookla-speedtest
+        exit 1
+    fi
+    # 如果官方页面返回相对路径，则补充官方域名
+    case "$OOKLA_URL" in
+        http://*|https://*)
+            ;;
+        /*)
+            OOKLA_URL="https://www.speedtest.net${OOKLA_URL}"
+            ;;
+        *)
+            OOKLA_URL="https://www.speedtest.net/${OOKLA_URL}"
+            ;;
+    esac
+    echo "🎯 Ookla ARCH: ${OOKLA_ARCH}"
+    echo "🔗 Download: ${OOKLA_URL}"
+    # ------------------------------------------------------------
+    # 下载 Ookla Speedtest CLI
+    # ------------------------------------------------------------
+    wget -q --no-check-certificate \
+        "$OOKLA_URL" \
+        -O /tmp/ookla-speedtest/ookla-speedtest.tgz
+    # 检查下载文件
+    if [ ! -s /tmp/ookla-speedtest/ookla-speedtest.tgz ]; then
+        echo "❌ Ookla Speedtest CLI 下载失败！"
+        echo "URL: ${OOKLA_URL}"
+        rm -rf /tmp/ookla-speedtest
+        exit 1
+    fi
+    echo "📦 Ookla Speedtest CLI 下载完成："
+    ls -lh /tmp/ookla-speedtest/ookla-speedtest.tgz
+    # ------------------------------------------------------------
+    # 解压
+    # ------------------------------------------------------------
+    tar -xzf \
+        /tmp/ookla-speedtest/ookla-speedtest.tgz \
+        -C /tmp/ookla-speedtest
+    # 检查 speedtest 二进制
+    if [ ! -f /tmp/ookla-speedtest/speedtest ]; then
+        echo "❌ 解压后未找到 speedtest 二进制文件！"
+        rm -rf /tmp/ookla-speedtest
+        exit 1
+    fi
+    chmod 755 /tmp/ookla-speedtest/speedtest
+    echo "🔍 检查 Ookla Speedtest CLI 文件..."
+    if command -v file >/dev/null 2>&1; then
+        file /tmp/ookla-speedtest/speedtest
+    fi
+    # 使用 readelf 检查 ELF Machine
+    if command -v readelf >/dev/null 2>&1; then
+        if ! readelf -h /tmp/ookla-speedtest/speedtest | grep -q "AArch64"; then
+            echo "❌ Ookla Speedtest CLI 不是 AArch64 ELF 文件！"
+            readelf -h /tmp/ookla-speedtest/speedtest
+            rm -rf /tmp/ookla-speedtest
+            exit 1
+        fi
+        echo "✅ 已确认 Ookla Speedtest CLI 为 AArch64 架构"
+    fi
+    # ------------------------------------------------------------
+    # 安装到 luci-app-netspeedtest 实际使用的路径
+    # ------------------------------------------------------------
+    cp -f \
+        /tmp/ookla-speedtest/speedtest \
+        files/usr/libexec/netspeedtest/speedtest
+    chmod 755 \
+        files/usr/libexec/netspeedtest/speedtest
+    # 检查最终文件
+    if [ ! -x files/usr/libexec/netspeedtest/speedtest ]; then
+        echo "❌ Ookla Speedtest CLI 安装失败！"
+        rm -rf /tmp/ookla-speedtest
+        exit 1
+    fi
+    echo "✅ 最新稳定版 Ookla Speedtest CLI 预装完成！"
+    echo "   ARCH : ${OOKLA_ARCH}"
+    echo "   PATH : files/usr/libexec/netspeedtest/speedtest"
+    if command -v file >/dev/null 2>&1; then
+        file files/usr/libexec/netspeedtest/speedtest
+    fi
+    # 清理临时文件
+    rm -rf /tmp/ookla-speedtest
+else
+    echo "⚪️ 未选择 luci-app-netspeedtest"
+fi
+
 # 构建镜像
 echo "$(date '+%Y-%m-%d %H:%M:%S') - 开始构建......打印所有包名"
 echo "$PACKAGES"
