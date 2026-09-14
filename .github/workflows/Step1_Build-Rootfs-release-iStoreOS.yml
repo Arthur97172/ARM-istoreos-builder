@@ -164,7 +164,8 @@ jobs:
         
         mkdir -p imagebuilder/files/etc/{uci-defaults,banner1}
         cp files/etc/uci-defaults/99-custom.sh imagebuilder/files/etc/uci-defaults/
-        cp files/etc/banner imagebuilder/files/etc/banner1/
+        cp files/etc/banner imagebuilder/files/etc/
+        #cp files/etc/banner imagebuilder/files/etc/banner1/
         cp files/etc/rc.local imagebuilder/files/etc/
         mkdir -p imagebuilder/files/etc/opkg
         cp -r files/customfeeds/* imagebuilder/files/etc/opkg/ 2>/dev/null || true
