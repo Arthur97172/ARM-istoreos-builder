@@ -50,6 +50,9 @@ if [ "$count" -eq 1 ]; then
     uci set network.lan.proto='dhcp'
     uci delete network.lan.ipaddr
     uci delete network.lan.netmask
+    uci delete network.lan.gateway     
+    uci delete network.lan.dns
+    uci commit network
 elif [ "$count" -gt 1 ]; then
     # 多网口配置 WAN
     uci set network.wan=interface
