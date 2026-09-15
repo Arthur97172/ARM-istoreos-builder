@@ -1,7 +1,7 @@
 #!/bin/sh
 # 仅首次运行iStoreOS时，会执行以下脚本。重启后消失
 
-LOGFILE="/etc/config/uci-defaults-log.txt"
+LOGFILE="/tmp/uci-defaults-log.txt"
 echo "Starting 99-custom.sh at $(date)" >>$LOGFILE
 
 # 基础设置
