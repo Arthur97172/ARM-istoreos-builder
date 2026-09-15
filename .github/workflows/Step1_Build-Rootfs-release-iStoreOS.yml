@@ -85,11 +85,11 @@ jobs:
     - name: ⚙️ 设置IP、网关和版本号
       run: |
         CONFIG_PATH="./files/etc/uci-defaults/99-custom.sh"
+        BANNER_PATH="./files/etc/banner"
         echo "当前网络配置路径: $CONFIG_PATH"
         
-        # 1. 替换版本号占位符
-        sed -i "s/版本号/${{ env.VERSION }}/g" "$CONFIG_PATH"
-        [ -f "./files/etc/banner" ] && sed -i "s/版本号/${{ env.VERSION }}/g" "./files/etc/banner"
+        # 1. 替换版本号
+        sed -i "s/VERXXXX/${{ env.VERSION }}/g" "$CONFIG_PATH"
 
         # 2. 网络逻辑配置 (关键修改点：不再删除行，改用关键词替换)
         if [ "${{ inputs.network_settings }}" = "static" ]; then
@@ -104,11 +104,19 @@ jobs:
            # 保持原脚本逻辑：单网口自动 DHCP，多网口保持 192.168.10.1
         fi
 
-        # 3. 替换脚本末尾的描述信息
-        sed -i "s/VERXXXX/${{ env.VERSION }}/g" "$CONFIG_PATH"
-        
         echo "✅ 配置修改完成，输出预览："
         cat "$CONFIG_PATH"
+
+        # 3. 替换 banner 信息（只有文件存在时才执行替换与预览）
+        if [ -f "$BANNER_PATH" ]; then
+          echo "当前banner配置路径: $BANNER_PATH"
+          sed -i "s/VERXXXX/${{ env.VERSION }}/g" "$BANNER_PATH"
+          sed -i "s/WRTVERSIONINFO/iStoreOS/g" "$BANNER_PATH"
+          echo "✅ banner配置修改完成，输出预览："
+          cat "$BANNER_PATH"
+        else
+          echo "⚠️ 未找到 banner 文件，跳过替换。"
+        fi
 
     - name: 🛠️ 安装依赖
       run: |
