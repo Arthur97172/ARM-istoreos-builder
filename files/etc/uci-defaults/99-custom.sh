@@ -75,7 +75,7 @@ fi
 # 注意：如果是单网口且用户在 Action 选了 DHCP，Workflow 会删掉下面这两行并把 proto 改为 dhcp
 uci set network.lan.proto='static'
 uci set network.lan.netmask='255.255.255.0'
-uci set network.lan.ipaddr='192.168.10.1'
+uci set network.lan.ipaddr='__IPADDR__'
 
 # 权限与服务
 uci delete ttyd.@ttyd[0].interface
