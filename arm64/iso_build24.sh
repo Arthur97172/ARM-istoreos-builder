@@ -1142,7 +1142,6 @@ if echo "$PACKAGES" | grep -q "luci-app-netspeedtest"; then
     echo "🚀 检测到 luci-app-netspeedtest，开始下载最新稳定版 Ookla Speedtest CLI..."
     # 创建目标目录
     mkdir -p files/usr/libexec/netspeedtest
-    # Airoha / AN7581 使用 ARM64
     OOKLA_ARCH="aarch64"
     # 创建临时目录
     rm -rf /tmp/ookla-speedtest
