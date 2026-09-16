@@ -300,13 +300,13 @@ jobs:
         run: |
           echo "📦 正在下载预构建 rootfs"
           mkdir -p bin/targets/armsr/armv8
-          curl -L -o bin/targets/armsr/armv8/istoreos-armsr-armv8-generic-rootfs-.img.gz \
+          curl -L -o bin/targets/armsr/armv8/istoreos-armsr-armv8-generic-rootfs.img.gz \
             https://github.com/${{ github.actor }}/iStoreOS-ARM/releases/download/iStoreOS-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz
 
       - name: 🔍 查找rootfs.img.gz所在路径
         id: find_rootfs
         run: |
-          ROOTFS_FILE=$(find bin/targets/armsr/armv8/ -type f -name "istoreos-armsr-armv8-generic-rootfs-.img.gz" | head -n1)
+          ROOTFS_FILE=$(find bin/targets/armsr/armv8/ -type f -name "istoreos-armsr-armv8-generic-rootfs.img.gz" | head -n1)
           echo "✅ Found: $ROOTFS_FILE"
           if [ ! -f "$ROOTFS_FILE" ]; then
             echo "❌ 找不到 rootfs 文件"
