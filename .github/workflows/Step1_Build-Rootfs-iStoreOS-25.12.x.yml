@@ -1,4 +1,4 @@
-name: 💿 Step1_Build-Rootfs-iStoreOS 25.12.x
+name: 📦 Step1_Build-Rootfs-iStoreOS 25.12.x
 
 on:
   workflow_dispatch:
