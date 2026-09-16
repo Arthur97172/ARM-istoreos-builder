@@ -318,11 +318,11 @@ jobs:
         run: |
           cd bin/targets/armsr/armv8  
           # 1. 解压 img.gz 得到 img 镜像
-          gunzip -k istoreos-armsr-armv8-generic-rootfs-.img.gz  
+          gunzip -k istoreos-armsr-armv8-generic-rootfs.img.gz  
           # 2. 创建临时挂载目录
           mkdir -p /tmp/rootfs_mount      
           # 3. 挂载 img 文件
-          sudo mount -o loop istoreos-armsr-armv8-generic-rootfs-.img /tmp/rootfs_mount          
+          sudo mount -o loop istoreos-armsr-armv8-generic-rootfs.img /tmp/rootfs_mount          
           # 4. 重新打包为 ophub 所需的 tar.gz 格式
           cd /tmp/rootfs_mount
           sudo tar -czvf $GITHUB_WORKSPACE/bin/targets/armsr/armv8/openwrt-rootfs.tar.gz .       
