@@ -1,0 +1,195 @@
+name: 💿 Step1_Build-Rootfs-iStoreOS 25.12.x
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_version:
+        description: "请选择构建版本 (latest 为官网最新)"
+        required: true
+        default: 'latest'
+        type: choice
+        options:
+          - 'latest'  
+          - '20260911'  
+      luci_version:
+        description: "选择luci版本"
+        required: true
+        default: "25.12.5"
+        type: choice
+        options:       
+          - '25.12.5'           
+      ipaddr:
+        description: "请设置软路由的管理地址,格式:192.168.x.1"
+        required: true
+        default: '192.168.10.1'
+      gateway:
+        description: '请输入默认网关'
+        required: true
+        default: '192.168.10.1'
+      include_docker:
+        description: "是否集成 Docker 插件"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - 'yes'
+          - 'no'
+
+env:
+  VERSION: ${{ inputs.luci_version }}
+  DOCKER: ${{ inputs.include_docker }}
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    # 关键：添加写入权限，解决 403 报错
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: ⚙️ 设置可执行权限
+      run: | 
+        chmod +x arm64/iso_build25.sh
+        chmod +x shell/*.sh
+
+    - name: ⚙️ 设置IP、网关和版本号
+      run: |
+        CONFIG_PATH="./files/etc/uci-defaults/99-custom.sh"
+        BANNER_PATH="./files/etc/banner"
+        echo "当前网络配置路径: $CONFIG_PATH"   
+        # 1. 替换 IP
+        sed -i "s/__IPADDR__/${{ inputs.ipaddr }}/g" "$CONFIG_PATH"
+        # 2. 替换 系统名称
+        sed -i "s/VERXXXX/${{ env.VERSION }}/g" "$CONFIG_PATH"
+        echo "✅ 配置修改完成，输出预览："
+        cat "$CONFIG_PATH"
+        # 3. 替换 banner 信息（只有文件存在时才执行替换与预览）
+        if [ -f "$BANNER_PATH" ]; then
+          echo "当前banner配置路径: $BANNER_PATH"
+          sed -i "s/VERXXXX/${{ env.VERSION }}/g" "$BANNER_PATH"
+          sed -i "s/WRTVERSIONINFO/iStoreOS/g" "$BANNER_PATH"
+          echo "✅ banner配置修改完成，输出预览："
+          cat "$BANNER_PATH"
+        else
+          echo "⚠️ 未找到 banner 文件，跳过替换。"
+        fi
+
+    - name: 🛠️ 安装依赖
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libncurses5-dev libncursesw5-dev zstd curl unzip tree qemu-utils genisoimage
+
+    - name: ⏬ 下载 ImageBuilder
+     # 必须在这里添加这个 env 块
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        BUILD_VER="${{ inputs.build_version }}"
+        REPO="${{ github.repository }}"
+        TAG="iStoreOS-Imagebuilder"
+        TARGET_SUFFIX="istoreos-imagebuilder-armsr-armv8.Linux-x86_64.tar.zst"
+
+        if [ "$BUILD_VER" = "latest" ]; then
+          echo "🔍 正在从你的 GitHub Release 中寻找最新备份..."
+          
+          # 获取资产列表 -> 过滤出 imagebuilder 文件 -> 按名称倒序排序 -> 取第一个
+          LATEST_FILE=$(gh release view "$TAG" --repo "$REPO" --json assets --jq '.assets[].name' | grep "$TARGET_SUFFIX" | sort -r | head -n 1)
+          
+          if [ -z "$LATEST_FILE" ]; then
+            echo "❌ 错误：在 Release 标签 $TAG 下没找到任何备份文件，请检查同步 Workflow 是否成功运行过。"
+            exit 1
+          fi
+          
+          echo "✅ 找到最新的备份文件: $LATEST_FILE"
+          URL="https://github.com/$REPO/releases/download/$TAG/$LATEST_FILE"
+        else
+          echo "固定版本模式：准备下载 $BUILD_VER 备份"
+          URL="https://github.com/$REPO/releases/download/$TAG/${BUILD_VER}-${TARGET_SUFFIX}"
+        fi
+
+        echo "正在下载: $URL"
+        # 使用 -f 确保如果文件不存在时报错停止，而不是下载一个错误页面
+        curl -Lf -o imagebuilder.tar.zst "$URL"
+        
+        # 解压
+        tar --use-compress-program=unzstd -xvf imagebuilder.tar.zst
+        # 这里的解压目录匹配官方默认生成的文件夹名
+        mv istoreos-imagebuilder-* imagebuilder
+
+    - name: 🔄 复制并设置必备文件
+      run: |
+        # ⚠️ 确保这里复制了 repositories.conf
+        cp arm64/iso_build25.sh imagebuilder/
+        cp arm64/isotoreos-repositories imagebuilder/repositories
+        cat shell/apk-custom-packages.sh >> imagebuilder/apk-custom-packages.sh
+        chmod +x imagebuilder/apk-custom-packages.sh
+        cp shell/prepare-packages.sh imagebuilder/
+        mkdir -p imagebuilder/files/etc/uci-defaults imagebuilder/files/etc/apk/repositories.d
+        cp files/etc/uci-defaults/99-custom.sh imagebuilder/files/etc/uci-defaults/
+        cp files/etc/banner imagebuilder/files/etc/
+        cp files/etc/rc.local imagebuilder/files/etc/
+        # 追加自定义源到 APK repositories（FIRMWARE 内 /etc/apk/repositories 会用这个）
+        cat files/customfeeds/25.customfeeds.list >> imagebuilder/files/etc/apk/repositories.d/customfeeds.list
+        echo "✅ 文件准备完成"
+
+    - name: ⚙️ 动态获取 Kmod 哈希并更新配置
+      run: |
+        BUILD_VER="${{ env.VERSION }}"
+        # 确保基础路径正确（ARM 架构路径）
+        BASE_URL="https://downloads.openwrt.org/releases/${BUILD_VER}/targets/armsr/armv8/kmods/"
+        
+        echo "正在从 $BASE_URL 获取最新的内核哈希..."
+        KMOD_DIR=$(curl -sL $BASE_URL | grep -oE "[0-9.-]+-[a-f0-9]{32}" | head -n 1)
+        if [ -n "$KMOD_DIR" ]; then
+          FULL_KMOD_URL="${BASE_URL}${KMOD_DIR}/packages.adb"
+          echo "✅ 成功匹配 kmods 路径: $FULL_KMOD_URL"
+          # 替换 repositories 文件中的占位符
+          sed -i "s|VERSION_PLACEHOLDER|${BUILD_VER}|g" imagebuilder/repositories
+          sed -i "s|KMOD_PLACEHOLDER|${FULL_KMOD_URL}|g" imagebuilder/repositories
+        else
+          echo "❌ 无法获取 Kmod 哈希"
+          exit 1
+        fi
+        echo "=== repositories 内容 ==="
+        cat imagebuilder/repositories
+
+    - name: 🧱 构建iStoreOS-rootfs
+      working-directory: ./imagebuilder
+      run: bash ./iso_build25.sh
+
+    - name: 📝 重命名 rootfs 文件
+      run: |
+        cd imagebuilder/bin/targets/armsr/armv8
+        for f in *generic-rootfs.tar.gz; do
+          if [ -f "$f" ]; then
+            newname="${f/-rootfs.tar.gz/-rootfs-Docker-${{ env.DOCKER }}.tar.gz}"
+            mv "$f" "$newname"
+            echo "已重命名: $f → $newname"
+          fi
+        done
+        ls -lh
+
+    - name: 🚀 上传到 Release
+      uses: softprops/action-gh-release@v2.2.1
+      with:
+        tag_name: iStoreOS-ARM-${{ env.VERSION }}-RELEASE
+        body: |
+          📡 ------------------------------路由器后台信息------------------------------
+         
+          📌 版本： iStoreOS-ARM-${{ env.VERSION }}
+          🧠 内核： Please Login to iStoreOS → System → Amlogic Service → Replace the Kernel
+         
+          🧩 集成： 包含了基础系统组件、驱动、网络工具、容器支持、LuCI界面及插件等
+         
+          👤 用户名： root
+         
+          🔒 密码： 无
+         
+          🌐 初始IP： ${{ inputs.ipaddr }}
+         
+        files: imagebuilder/bin/targets/armsr/armv8/*generic-rootfs-Docker-*.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
