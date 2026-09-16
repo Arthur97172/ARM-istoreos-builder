@@ -1,4 +1,4 @@
-name: 💿 Step2_Build-Immortalwrt-or-iStoreOS-ARM
+name: 💿 Step2_Build-iStoreOS-ARM-24.10.x
 on:
   repository_dispatch:
   workflow_dispatch:
