@@ -16,10 +16,6 @@ uci set luci.main.lang='zh_cn'
 uci commit system
 uci commit luci
 
-# 检查 PPPoE 配置
-SETTINGS_FILE="/etc/config/pppoe-settings"
-[ -f "$SETTINGS_FILE" ] && . "$SETTINGS_FILE"
-
 # 计算网卡物理接口数量
 ifnames=""
 for iface in /sys/class/net/*; do
