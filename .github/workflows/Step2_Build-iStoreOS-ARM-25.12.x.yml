@@ -314,6 +314,27 @@ jobs:
           fi
           echo "file=$ROOTFS_FILE" >> $GITHUB_OUTPUT
 
+      - name: 🔄 将 rootfs.img.gz 转换为 rootfs.tar.gz
+        run: |
+          cd bin/targets/armsr/armv8
+          
+          # 1. 解压 img.gz 得到 img 镜像
+          gunzip -k istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz
+          
+          # 2. 创建临时挂载目录
+          mkdir -p /tmp/rootfs_mount
+          
+          # 3. 挂载 img 文件 (如果是 squashfs/ext4 镜像可以直接 loop 挂载)
+          sudo mount -o loop istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img /tmp/rootfs_mount
+          
+          # 4. 重新打包为 ophub 所需的 tar.gz 格式
+          cd /tmp/rootfs_mount
+          sudo tar -czvf $GITHUB_WORKSPACE/bin/targets/armsr/armv8/openwrt-rootfs.tar.gz .
+          
+          # 5. 卸载镜像
+          cd $GITHUB_WORKSPACE
+          sudo umount /tmp/rootfs_mount
+
       - name: 🧱 打包 iStoreOS 固件
         uses: ophub/amlogic-s9xxx-openwrt@main
         with:
