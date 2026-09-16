@@ -300,13 +300,13 @@ jobs:
         run: |
           echo "📦 正在下载预构建 rootfs"
           mkdir -p bin/targets/armsr/armv8
-          curl -L -o bin/targets/armsr/armv8/istoreos-armsr-armv8-generic-rootfs.img.gz \
-            https://github.com/${{ github.actor }}/iStoreOS-ARM/releases/download/iStoreOS-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz
+          curl -L -o bin/targets/armsr/armv8/openwrt-armvirt-64-default-rootfs.tar.gz \
+            https://github.com/${{ github.actor }}/iStoreOS-ARM/releases/download/iStoreOS-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.tar.gz
 
       - name: 🔍 查找rootfs.img.gz所在路径
         id: find_rootfs
         run: |
-          ROOTFS_FILE=$(find bin/targets/armsr/armv8/ -type f -name "istoreos-armsr-armv8-generic-rootfs.img.gz" | head -n1)
+          ROOTFS_FILE=$(find bin/targets/armsr/armv8/ -type f -name "*rootfs.tar.gz" | head -n1)
           echo "✅ Found: $ROOTFS_FILE"
           if [ ! -f "$ROOTFS_FILE" ]; then
             echo "❌ 找不到 rootfs 文件"
@@ -314,31 +314,10 @@ jobs:
           fi
           echo "file=$ROOTFS_FILE" >> $GITHUB_OUTPUT
 
-      - name: 🔄 将 rootfs.img.gz 转换为 rootfs.tar.gz
-        run: |
-          WORKDIR="$GITHUB_WORKSPACE/bin/targets/armsr/armv8"
-          MOUNT_DIR="/tmp/rootfs_mount"
-          mkdir -p "$MOUNT_DIR"
-          # 1. 解压文件（不加 -k，解压后直接删除原 gz 文件节约空间）
-          gunzip "$WORKDIR/istoreos-armsr-armv8-generic-rootfs.img.gz"
-          # 2. 注册错误清理机制：无论中间哪步报错退出，自动执行 umount
-          cleanup() {
-            echo "🧹 正在清理挂载目录..."
-            sudo umount "$MOUNT_DIR" 2>/dev/null || true
-            rm -rf "$MOUNT_DIR" "$WORKDIR/istoreos-armsr-armv8-generic-rootfs.img"
-          }
-          trap cleanup EXIT
-          # 3. 挂载镜像
-          sudo mount -o loop "$WORKDIR/istoreos-armsr-armv8-generic-rootfs.img" "$MOUNT_DIR"
-          # 4. 打包为 tar.gz
-          echo "📦 正在重新打包为 openwrt-rootfs.tar.gz..."
-          sudo tar -czf "$WORKDIR/openwrt-rootfs.tar.gz" -C "$MOUNT_DIR" .
-          echo "✅ 转换完成！"
-
       - name: 🧱 打包 iStoreOS 固件
         uses: ophub/amlogic-s9xxx-openwrt@main
         with:
-          openwrt_path: bin/targets/armsr/armv8/openwrt-rootfs.tar.gz
+          openwrt_path: ${{ steps.find_rootfs.outputs.file }}
           openwrt_board: ${{ inputs.openwrt_board }}
           openwrt_kernel: ${{ inputs.openwrt_kernel }}
           auto_kernel: ${{ inputs.auto_kernel }}
