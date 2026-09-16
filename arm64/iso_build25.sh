@@ -339,7 +339,6 @@ if echo "$PACKAGES" | grep -q "luci-app-netspeedtest"; then
     echo "🚀 检测到 luci-app-netspeedtest，开始下载最新稳定版 Ookla Speedtest CLI..."
     # 创建目标目录
     mkdir -p files/usr/libexec/netspeedtest
-    # Airoha / AN7581 使用 ARM64
     OOKLA_ARCH="aarch64"
     # 创建临时目录
     rm -rf /tmp/ookla-speedtest
@@ -379,18 +378,39 @@ if echo "$PACKAGES" | grep -q "luci-app-netspeedtest"; then
     echo "🎯 Ookla ARCH: ${OOKLA_ARCH}"
     echo "🔗 Download: ${OOKLA_URL}"
     # ------------------------------------------------------------
-    # 下载 Ookla Speedtest CLI
+    # 下载 Ookla Speedtest CLI（加入最多重试 5 次机制）
     # ------------------------------------------------------------
-    wget -q --no-check-certificate \
-        "$OOKLA_URL" \
-        -O /tmp/ookla-speedtest/ookla-speedtest.tgz
-    # 检查下载文件
-    if [ ! -s /tmp/ookla-speedtest/ookla-speedtest.tgz ]; then
-        echo "❌ Ookla Speedtest CLI 下载失败！"
+    MAX_RETRIES=5
+    RETRY_COUNT=0
+    DOWNLOAD_SUCCESS=0
+
+    while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+        RETRY_COUNT=$((RETRY_COUNT + 1))
+        echo "📥 正在下载 (尝试 $RETRY_COUNT/$MAX_RETRIES)..."
+        
+        wget -q --no-check-certificate \
+            "$OOKLA_URL" \
+            -O /tmp/ookla-speedtest/ookla-speedtest.tgz
+
+        # 检查下载文件是否成功且非空
+        if [ -s /tmp/ookla-speedtest/ookla-speedtest.tgz ]; then
+            DOWNLOAD_SUCCESS=1
+            break
+        else
+            echo "⚠️ 第 $RETRY_COUNT 次下载失败，等待 5 秒后重试..."
+            rm -f /tmp/ookla-speedtest/ookla-speedtest.tgz
+            sleep 5
+        fi
+    done
+
+    # 检查最终下载结果
+    if [ $DOWNLOAD_SUCCESS -eq 0 ]; then
+        echo "❌ Ookla Speedtest CLI 下载失败，已重试 $MAX_RETRIES 次，终止构建！"
         echo "URL: ${OOKLA_URL}"
         rm -rf /tmp/ookla-speedtest
         exit 1
     fi
+
     echo "📦 Ookla Speedtest CLI 下载完成："
     ls -lh /tmp/ookla-speedtest/ookla-speedtest.tgz
     # ------------------------------------------------------------
