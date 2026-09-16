@@ -280,14 +280,6 @@ on:
         type: choice
         options:
           - RELEASE
-      network_settings:
-        description: "请选择初始网络配置（先确保St1有执行）"
-        required: true
-        default: "dhcp"
-        type: choice
-        options:
-          - static
-          - dhcp
       include_docker:
         description: "是否集成 Docker 插件"
         required: true
@@ -364,7 +356,7 @@ jobs:
       - name: 🚀 上传到 Release
         uses: softprops/action-gh-release@v2.2.1
         with:
-          tag_name: iStoreOS-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}-${{ inputs.network_settings }}
+          tag_name: iStoreOS-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}
           files: |
             ${{ env.PACKAGED_OUTPUTPATH }}/*.img.gz
         env:
