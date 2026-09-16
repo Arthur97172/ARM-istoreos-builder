@@ -316,19 +316,24 @@ jobs:
 
       - name: 🔄 将 rootfs.img.gz 转换为 rootfs.tar.gz
         run: |
-          cd bin/targets/armsr/armv8  
-          # 1. 解压 img.gz 得到 img 镜像
-          gunzip -k istoreos-armsr-armv8-generic-rootfs.img.gz  
-          # 2. 创建临时挂载目录
-          mkdir -p /tmp/rootfs_mount      
-          # 3. 挂载 img 文件
-          sudo mount -o loop istoreos-armsr-armv8-generic-rootfs.img /tmp/rootfs_mount          
-          # 4. 重新打包为 ophub 所需的 tar.gz 格式
-          cd /tmp/rootfs_mount
-          sudo tar -czvf $GITHUB_WORKSPACE/bin/targets/armsr/armv8/openwrt-rootfs.tar.gz .       
-          # 5. 卸载镜像
-          cd $GITHUB_WORKSPACE
-          sudo umount /tmp/rootfs_mount
+          WORKDIR="$GITHUB_WORKSPACE/bin/targets/armsr/armv8"
+          MOUNT_DIR="/tmp/rootfs_mount"
+          mkdir -p "$MOUNT_DIR"
+          # 1. 解压文件（不加 -k，解压后直接删除原 gz 文件节约空间）
+          gunzip "$WORKDIR/istoreos-armsr-armv8-generic-rootfs.img.gz"
+          # 2. 注册错误清理机制：无论中间哪步报错退出，自动执行 umount
+          cleanup() {
+            echo "🧹 正在清理挂载目录..."
+            sudo umount "$MOUNT_DIR" 2>/dev/null || true
+            rm -rf "$MOUNT_DIR" "$WORKDIR/istoreos-armsr-armv8-generic-rootfs.img"
+          }
+          trap cleanup EXIT
+          # 3. 挂载镜像
+          sudo mount -o loop "$WORKDIR/istoreos-armsr-armv8-generic-rootfs.img" "$MOUNT_DIR"
+          # 4. 打包为 tar.gz
+          echo "📦 正在重新打包为 openwrt-rootfs.tar.gz..."
+          sudo tar -czf "$WORKDIR/openwrt-rootfs.tar.gz" -C "$MOUNT_DIR" .
+          echo "✅ 转换完成！"
 
       - name: 🧱 打包 iStoreOS 固件
         uses: ophub/amlogic-s9xxx-openwrt@main
