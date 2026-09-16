@@ -300,37 +300,32 @@ jobs:
         run: |
           echo "📦 正在下载预构建 rootfs"
           mkdir -p bin/targets/armsr/armv8
-          curl -L -o bin/targets/armsr/armv8/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz \
+          curl -L -o bin/targets/armsr/armv8/istoreos-armsr-armv8-generic-rootfs-.img.gz \
             https://github.com/${{ github.actor }}/iStoreOS-ARM/releases/download/iStoreOS-ARM-${{ env.VERSION }}-${{ inputs.openwrt_rootfs }}/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz
 
       - name: 🔍 查找rootfs.img.gz所在路径
         id: find_rootfs
         run: |
-          ROOTFS_FILE=$(find bin/targets/armsr/armv8/ -type f -name "*rootfs-Docker-${{ env.DOCKER }}.img.gz" | head -n1)
+          ROOTFS_FILE=$(find bin/targets/armsr/armv8/ -type f -name "istoreos-armsr-armv8-generic-rootfs-.img.gz" | head -n1)
           echo "✅ Found: $ROOTFS_FILE"
           if [ ! -f "$ROOTFS_FILE" ]; then
-            echo "❌ 找不到 rootfs-Docker-${{ env.DOCKER }}.img.gz 文件"
+            echo "❌ 找不到 rootfs 文件"
             exit 1
           fi
           echo "file=$ROOTFS_FILE" >> $GITHUB_OUTPUT
 
       - name: 🔄 将 rootfs.img.gz 转换为 rootfs.tar.gz
         run: |
-          cd bin/targets/armsr/armv8
-          
+          cd bin/targets/armsr/armv8  
           # 1. 解压 img.gz 得到 img 镜像
-          gunzip -k istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz
-          
+          gunzip -k istoreos-armsr-armv8-generic-rootfs-.img.gz  
           # 2. 创建临时挂载目录
-          mkdir -p /tmp/rootfs_mount
-          
-          # 3. 挂载 img 文件 (如果是 squashfs/ext4 镜像可以直接 loop 挂载)
-          sudo mount -o loop istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img /tmp/rootfs_mount
-          
+          mkdir -p /tmp/rootfs_mount      
+          # 3. 挂载 img 文件
+          sudo mount -o loop istoreos-armsr-armv8-generic-rootfs-.img /tmp/rootfs_mount          
           # 4. 重新打包为 ophub 所需的 tar.gz 格式
           cd /tmp/rootfs_mount
-          sudo tar -czvf $GITHUB_WORKSPACE/bin/targets/armsr/armv8/openwrt-rootfs.tar.gz .
-          
+          sudo tar -czvf $GITHUB_WORKSPACE/bin/targets/armsr/armv8/openwrt-rootfs.tar.gz .       
           # 5. 卸载镜像
           cd $GITHUB_WORKSPACE
           sudo umount /tmp/rootfs_mount
@@ -339,7 +334,6 @@ jobs:
         uses: ophub/amlogic-s9xxx-openwrt@main
         with:
           openwrt_path: bin/targets/armsr/armv8/openwrt-rootfs.tar.gz
-          #openwrt_path: ${{ steps.find_rootfs.outputs.file }}
           openwrt_board: ${{ inputs.openwrt_board }}
           openwrt_kernel: ${{ inputs.openwrt_kernel }}
           auto_kernel: ${{ inputs.auto_kernel }}
