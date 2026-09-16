@@ -20,7 +20,7 @@ uci commit luci
 SETTINGS_FILE="/etc/config/pppoe-settings"
 [ -f "$SETTINGS_FILE" ] && . "$SETTINGS_FILE"
 
-# 1. 计算网卡物理接口数量
+# 计算网卡物理接口数量
 ifnames=""
 for iface in /sys/class/net/*; do
     iface_name=$(basename "$iface")
@@ -30,95 +30,53 @@ for iface in /sys/class/net/*; do
 done
 ifnames=$(echo "$ifnames" | awk '{$1=$1};1')
 count=$(echo "$ifnames" | wc -w)
-
-# 2. 硬件板号兼容性映射
-board_name=$(cat /tmp/sysinfo/board_name 2>/dev/null || echo "unknown")
-case "$board_name" in
-    "radxa,e20c"|"friendlyarm,nanopi-r5c")
-        wan_ifname="eth1"
-        lan_ifnames="eth0"
-        ;;
-    *)
-        wan_ifname=$(echo "$ifnames" | awk '{print $1}')
-        lan_ifnames=$(echo "$ifnames" | cut -d ' ' -f2-)
-        ;;
-esac
-
 # 网络设置
 if [ "$count" -eq 1 ]; then
-    # 单网口设备：采用 DHCP 模式
-    # IP 地址由上级路由器自动分配
-    # 单网口设备不支持在此处修改 IP
+    # 单网口设备：采用 DHCP 模式（旁路由）
     uci set network.lan.proto='dhcp'
-    uci delete network.lan.ipaddr
-    uci delete network.lan.netmask
-    uci delete network.lan.gateway
-    uci delete network.lan.dns
-
+    uci -q delete network.lan.ipaddr
+    uci -q delete network.lan.netmask
+    uci -q delete network.lan.gateway
+    uci -q delete network.lan.dns
 elif [ "$count" -gt 1 ]; then
-    # 提取第一个接口作为 WAN
+    # 多网口设备：第一个网口作为 WAN
     wan_ifname=$(echo "$ifnames" | awk '{print $1}')
-
-    # 剩余接口作为 LAN
+    # 剩余网口作为 LAN
     lan_ifnames=$(echo "$ifnames" | cut -d ' ' -f2-)
-
-    # =========================
     # WAN 配置
-    # =========================
     uci set network.wan=interface
     uci set network.wan.device="$wan_ifname"
     uci set network.wan.proto='dhcp'
-
-    # =========================
     # WAN6 配置
-    # =========================
     uci set network.wan6=interface
     uci set network.wan6.device="$wan_ifname"
-
-    # =========================
     # br-lan 端口配置
-    # =========================
-    # 查找名称为 br-lan 的 device section
     section=$(uci show network | awk -F '[.=]' \
         '/\.@?device\[\d+\]\.name=.br-lan.$/ {print $2; exit}')
-
     if [ -z "$section" ]; then
         echo "error: cannot find device 'br-lan'." >> "$LOGFILE"
     else
-        # 删除原来的 ports 列表
         uci -q delete "network.$section.ports"
-
-        # 将剩余网口加入 br-lan
         for port in $lan_ifnames; do
             uci add_list "network.$section.ports"="$port"
         done
-
         echo "ports of device 'br-lan' updated." >> "$LOGFILE"
     fi
-
-    # =========================
-    # LAN 配置
-    # =========================
-    # 多网口设备使用静态 IP
-    # __IPADDR__ 会由 Workflow 中的 sed 自动替换
+    # 多网口 LAN 必须明确指定静态 IP（Workflow 的 sed 会自动替换 __IPADDR__）
     uci set network.lan.proto='static'
     uci set network.lan.ipaddr='__IPADDR__'
     uci set network.lan.netmask='255.255.255.0'
 fi
-
 # =========================
 # SSH / Web 管理
 # =========================
-# 设置所有网口可连接 SSH
 uci delete ttyd.@ttyd[0].interface
 uci set dropbear.@dropbear[0].Interface=''
-
 # =========================
 # 保存配置
 # =========================
 uci commit network
 uci commit
-
 # 清理并还原 Banner
 cp /etc/banner1/banner /etc/
 rm -r /etc/banner1
