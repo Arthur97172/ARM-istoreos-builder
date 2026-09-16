@@ -172,6 +172,27 @@ jobs:
         done
         ls -lh
 
+    - name: 🔄 将 rootfs.img.gz 转换为 rootfs.tar.gz
+      run: |
+        WORKDIR="$GITHUB_WORKSPACE/bin/targets/armsr/armv8"
+        MOUNT_DIR="/tmp/rootfs_mount"
+        mkdir -p "$MOUNT_DIR"
+        # 1. 解压文件（不加 -k，解压后直接删除原 gz 文件节约空间）
+        gunzip "$WORKDIR/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz"
+        # 2. 注册错误清理机制：无论中间哪步报错退出，自动执行 umount
+        cleanup() {
+          echo "🧹 正在清理挂载目录..."
+          sudo umount "$MOUNT_DIR" 2>/dev/null || true
+          rm -rf "$MOUNT_DIR" "$WORKDIR/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz"
+        }
+        trap cleanup EXIT
+        # 3. 挂载镜像
+        sudo mount -o loop "$WORKDIR/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img" "$MOUNT_DIR"
+        # 4. 打包为 tar.gz
+        echo "📦 正在重新打包为 istoreos-rootfs.tar.gz..."
+        sudo tar -czf "$WORKDIR/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.tar.gz" -C "$MOUNT_DIR" .
+        echo "✅ 转换完成！"
+
     - name: 🚀 上传到 Release
       uses: softprops/action-gh-release@v2.2.1
       with:
@@ -190,6 +211,6 @@ jobs:
          
           🌐 初始IP： ${{ inputs.ipaddr }}
          
-        files: imagebuilder/bin/targets/armsr/armv8/*generic-rootfs-Docker-*.img.gz
+        files: imagebuilder/bin/targets/armsr/armv8/*generic-rootfs-Docker-*.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
