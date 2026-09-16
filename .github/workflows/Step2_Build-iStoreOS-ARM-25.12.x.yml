@@ -266,7 +266,7 @@ on:
         default: true
         type: boolean
       openwrt_rootfs:
-        description: "请选择Rootfs通用底包（先确保St1有执行）"
+        description: "请选择Rootfs通用底包"
         required: true
         default: "RELEASE"
         type: choice
