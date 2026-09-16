@@ -174,24 +174,48 @@ jobs:
 
     - name: 🔄 将 rootfs.img.gz 转换为 rootfs.tar.gz
       run: |
-        WORKDIR="$GITHUB_WORKSPACE/bin/targets/armsr/armv8"
+        WORKDIR="$GITHUB_WORKSPACE/imagebuilder/bin/targets/armsr/armv8"
         MOUNT_DIR="/tmp/rootfs_mount"
+          
+        cd "$WORKDIR"
+          
+        # 1. 重命名 rootfs.img.gz
+        for f in *rootfs.img.gz; do
+          if [ -f "$f" ]; then
+            newname="${f/-generic-squashfs-rootfs.img.gz/-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz}"
+            mv "$f" "$newname"
+            echo "已重命名: $f → $newname"
+          fi
+        done
+
+        # 2. 准备挂载目录与错误清理机制
         mkdir -p "$MOUNT_DIR"
-        # 1. 解压文件（不加 -k，解压后直接删除原 gz 文件节约空间）
-        gunzip "$WORKDIR/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz"
-        # 2. 注册错误清理机制：无论中间哪步报错退出，自动执行 umount
         cleanup() {
-          echo "🧹 正在清理挂载目录..."
+          echo "🧹 清理挂载与临时文件..."
           sudo umount "$MOUNT_DIR" 2>/dev/null || true
-          rm -rf "$MOUNT_DIR" "$WORKDIR/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz"
+          rm -rf "$MOUNT_DIR" "$WORKDIR/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img"
         }
         trap cleanup EXIT
-        # 3. 挂载镜像
-        sudo mount -o loop "$WORKDIR/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img" "$MOUNT_DIR"
-        # 4. 打包为 tar.gz
-        echo "📦 正在重新打包为 istoreos-rootfs.tar.gz..."
-        sudo tar -czf "$WORKDIR/istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.tar.gz" -C "$MOUNT_DIR" .
-        echo "✅ 转换完成！"
+
+        TARGET_GZ="istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz"
+        TARGET_IMG="istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.img"
+          
+        # 生成要上传 Release 的 tar.gz 规范文件名，同时留一份 openwrt-rootfs.tar.gz 给 Step2 用
+        TARGET_TAR_RELEASE="istoreos-armsr-armv8-generic-rootfs-Docker-${{ env.DOCKER }}.tar.gz"
+
+        # 3. 加 -k 参数保留原始 img.gz 文件
+        gunzip -k "$TARGET_GZ"
+
+        # 4. 挂载 img 并打包为 tar.gz
+        sudo mount -o loop "$TARGET_IMG" "$MOUNT_DIR"
+        echo "📦 正在重新打包为 $TARGET_TAR_RELEASE..."
+        sudo tar -czf "$WORKDIR/$TARGET_TAR_RELEASE" -C "$MOUNT_DIR" .
+          
+        # 顺便复制一份 openwrt-rootfs.tar.gz 供后续步骤直接使用
+        cp "$WORKDIR/$TARGET_TAR_RELEASE" "$WORKDIR/openwrt-rootfs.tar.gz"
+
+        echo "✅ 转换完成！当前输出目录文件列表："
+        ls -lh "$WORKDIR"
 
     - name: 🚀 上传到 Release
       uses: softprops/action-gh-release@v2.2.1
@@ -210,7 +234,9 @@ jobs:
           🔒 密码： 无
          
           🌐 初始IP： ${{ inputs.ipaddr }}
-         
-        files: imagebuilder/bin/targets/armsr/armv8/*generic-rootfs-Docker-*.gz
+        
+        files: |
+          imagebuilder/bin/targets/armsr/armv8/*rootfs-Docker-*.img.gz
+          imagebuilder/bin/targets/armsr/armv8/*rootfs-Docker-*.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
