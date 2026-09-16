@@ -306,10 +306,10 @@ jobs:
       - name: 🔍 查找rootfs.img.gz所在路径
         id: find_rootfs
         run: |
-          ROOTFS_FILE=$(find bin/targets/armsr/armv8/ -type f -name "*rootfs.img.gz" | head -n1)
+          ROOTFS_FILE=$(find bin/targets/armsr/armv8/ -type f -name "*rootfs-Docker-${{ env.DOCKER }}.img.gz" | head -n1)
           echo "✅ Found: $ROOTFS_FILE"
           if [ ! -f "$ROOTFS_FILE" ]; then
-            echo "❌ 找不到 rootfs.img.gz 文件"
+            echo "❌ 找不到 rootfs-Docker-${{ env.DOCKER }}.img.gz 文件"
             exit 1
           fi
           echo "file=$ROOTFS_FILE" >> $GITHUB_OUTPUT
