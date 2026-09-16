@@ -338,7 +338,8 @@ jobs:
       - name: 🧱 打包 iStoreOS 固件
         uses: ophub/amlogic-s9xxx-openwrt@main
         with:
-          openwrt_path: ${{ steps.find_rootfs.outputs.file }}
+          openwrt_path: bin/targets/armsr/armv8/openwrt-rootfs.tar.gz
+          #openwrt_path: ${{ steps.find_rootfs.outputs.file }}
           openwrt_board: ${{ inputs.openwrt_board }}
           openwrt_kernel: ${{ inputs.openwrt_kernel }}
           auto_kernel: ${{ inputs.auto_kernel }}
