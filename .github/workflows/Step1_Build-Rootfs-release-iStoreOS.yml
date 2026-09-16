@@ -37,14 +37,6 @@ on:
           - '24.10.6'
           - '24.10.7'         
           - '24.10.8'           
-      network_settings:
-        description: "请选择初始网络配置"
-        required: true
-        default: 'dhcp'
-        type: choice
-        options:
-          - 'static'
-          - 'dhcp'
       ipaddr:
         description: "请设置软路由的管理地址,格式:192.168.x.1"
         required: true
@@ -87,23 +79,10 @@ jobs:
         CONFIG_PATH="./files/etc/uci-defaults/99-custom.sh"
         BANNER_PATH="./files/etc/banner"
         echo "当前网络配置路径: $CONFIG_PATH"   
-        # 1. 替换版本号
+        # 1. 替换 IP
+        sed -i "s/__IPADDR__/${{ inputs.ipaddr }}/g" "$CONFIG_PATH"
+        # 2. 替换 系统名称
         sed -i "s/VERXXXX/${{ env.VERSION }}/g" "$CONFIG_PATH"
-        # 2. 网络逻辑配置
-        if [ "${{ inputs.network_settings }}" = "static" ]; then
-           echo "模式：静态IP (旁路由)"
-           # 将脚本内默认的IP替换为用户输入的 IP
-           sed -i "s/__IPADDR__/${{ inputs.ipaddr }}/g" "$CONFIG_PATH"
-           # 在设置 IP 的代码行后，动态插入网关和 DNS 设置
-           sed -i "/uci set network.lan.ipaddr/a \\
-           uci set network.lan.gateway='${{ inputs.gateway }}'\\
-           uci set network.lan.dns='${{ inputs.gateway }}'" "$CONFIG_PATH"
-        else
-           echo "模式：DHCP / 默认模式 (主路由)"
-           sed -i "s/__IPADDR__/${{ inputs.ipaddr }}/g" "$CONFIG_PATH"
-           # 针对多网口情况下的主路由，也需要把 __IPADDR__ 替换为用户在后台填写的管理IP
-           # LAN口管理IP也会变成你指定的地址，而WAN口则会自动DHCP
-        fi
         echo "✅ 配置修改完成，输出预览："
         cat "$CONFIG_PATH"
         # 3. 替换 banner 信息（只有文件存在时才执行替换与预览）
@@ -237,7 +216,7 @@ jobs:
     - name: 🚀 上传到 Release
       uses: softprops/action-gh-release@v2.2.1
       with:
-        tag_name: iStoreOS-ARM-${{ env.VERSION }}-RELEASE-${{ inputs.network_settings }}
+        tag_name: iStoreOS-ARM-${{ env.VERSION }}-RELEASE
         body: |
           📡 ------------------------------路由器后台信息------------------------------
          
