@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       build_version:
-        description: "请选择构建版本 (latest 为官网最新)"
+        description: "请选择构建版本"
         required: true
         default: '20260731'
         type: choice
