@@ -24,7 +24,8 @@ SETTINGS_FILE="/etc/config/pppoe-settings"
 ifnames=""
 for iface in /sys/class/net/*; do
     iface_name=$(basename "$iface")
-    if [ -e "$iface/device" ] && echo "$iface_name" | grep -Eq '^eth|^en'; then
+    if [ "$iface_name" != "lo" ] && [ "$iface_name" != "br-lan" ] && \
+       ! echo "$iface_name" | grep -qE '^br-|phy|ap'; then
         ifnames="$ifnames $iface_name"
     fi
 done
