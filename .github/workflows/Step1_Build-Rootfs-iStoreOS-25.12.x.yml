@@ -163,9 +163,9 @@ jobs:
     - name: 📝 重命名 rootfs 文件
       run: |
         cd imagebuilder/bin/targets/armsr/armv8
-        for f in *generic-squashfs-rootfs.img.gz; do
+        for f in *rootfs.img.gz; do
           if [ -f "$f" ]; then
-            newname="${f/-rootfs.img.gz/-rootfs-Docker-${{ env.DOCKER }}.img.gz}"
+            newname="${f/-generic-squashfs-rootfs.img.gz/-generic-rootfs-Docker-${{ env.DOCKER }}.img.gz}"
             mv "$f" "$newname"
             echo "已重命名: $f → $newname"
           fi
