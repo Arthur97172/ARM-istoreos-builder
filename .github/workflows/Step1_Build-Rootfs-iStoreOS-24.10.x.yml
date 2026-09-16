@@ -1,4 +1,4 @@
-name: 💿 Step1_Build-Rootfs-release-iStoreOS
+name: 💿 Step1_Build-Rootfs-iStoreOS 24.10.x
 
 on:
   workflow_dispatch:
@@ -6,10 +6,9 @@ on:
       build_version:
         description: "请选择构建版本 (latest 为官网最新)"
         required: true
-        default: 'latest'
+        default: '20260731'
         type: choice
         options:
-          - 'latest'
           - '20260731'  
           - '20260703'  
           - '20260605'    
