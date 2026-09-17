@@ -17,16 +17,37 @@
   [![](https://img.shields.io/badge/-免责声明-FFFFFF.svg)](#-免责声明-)
 </div>
 
----
+------
 
 ## 🤔 项目介绍 [![](https://img.shields.io/badge/-项目介绍-FFFFFF.svg)](#-项目介绍-)
 **目标是提供一个纯净的iStoreOS系统，支持24.10.x和25.12.x版本编译，并可选择是否包含Docker。** 
 
 ***编译快速，基本上15分钟就可以完成编译工作。***
 
-> [!TIP]
-> 😂此固件为 **非官方构建，不保证完全无BUG** ，请知悉😂
-> 
+## 🚀 快速上手步骤
+
+### 1. 开启 Fork 仓库的 Actions 权限
+默认情况下，Fork 后的仓库 GitHub Actions 会处于禁用状态：
+1. 打开你 Fork 后的 GitHub 仓库页面。
+2. 点击顶部导航栏的 **Actions** 标签页。
+3. 点击绿色按钮 **"I understand my workflows, go ahead and enable them"** 启用工作流。
+
+### 2. 运行 Step 1（基础固件编译）
+> ⚠️ **重要提示**：必须等待 **Step 1** 完全运行成功后，才能开始 Step 2！
+
+1. 在左侧工作流列表中选择 **Step 1**（例如：`Step1_Build-Rootfs-iStoreOS 24.10.x`）。
+2. 点击右上角的 **Run workflow** 下拉菜单。
+3. 在参数配置中，**选中/勾选编译 Docker 或非 Docker 固件**的选项。
+4. 点击 **Run workflow** 开始运行。
+5. 等待任务完成（图标变为绿色的 `✔`）。
+
+### 3. 运行 Step 2（打包含有插件/扩展的最终镜像）
+1. 当 **Step 1** 顺利跑完并生成产物（Artifacts）后，在左侧选择 **Step 2**（例如：`Step2_Build-iStoreOS-ARM-24.10.x`）。
+2. 点击 **Run workflow** 下拉菜单。
+3. （可选）根据需求选择对应的分支或配置参数。
+4. 点击 **Run workflow** 触发编译。
+5. 等待 Step 2 运行完毕，即可在 Actions 页面底部的 **Artifacts** 区域或 **Releases** 页面下载编译好的最终固件。
+
 ## 😅 第三方插件 [![](https://img.shields.io/badge/-第三方插件-FFFFFF.svg)](#-第三方插件-)
 <div align="left">
 
@@ -88,30 +109,6 @@
 > 
 > **"您的每一个⭐️，都是开源土壤里的一缕阳光，让灵感发芽，让创造生长~"**
 
-## 🚀 快速上手步骤
-
-### 1. 开启 Fork 仓库的 Actions 权限
-默认情况下，Fork 后的仓库 GitHub Actions 会处于禁用状态：
-1. 打开你 Fork 后的 GitHub 仓库页面。
-2. 点击顶部导航栏的 **Actions** 标签页。
-3. 点击绿色按钮 **"I understand my workflows, go ahead and enable them"** 启用工作流。
-
-### 2. 运行 Step 1（基础固件编译）
-> ⚠️ **重要提示**：必须等待 **Step 1** 完全运行成功后，才能开始 Step 2！
-
-1. 在左侧工作流列表中选择 **Step 1**（例如：`Step1_Build-Rootfs-iStoreOS 24.10.x`）。
-2. 点击右上角的 **Run workflow** 下拉菜单。
-3. 在参数配置中，**选中/勾选编译 Docker 或非 Docker 固件**的选项。
-4. 点击 **Run workflow** 开始运行。
-5. 等待任务完成（图标变为绿色的 `✔`）。
-
-### 3. 运行 Step 2（打包含有插件/扩展的最终镜像）
-1. 当 **Step 1** 顺利跑完并生成产物（Artifacts）后，在左侧选择 **Step 2**（例如：`Step2_Build-iStoreOS-ARM-24.10.x`）。
-2. 点击 **Run workflow** 下拉菜单。
-3. （可选）根据需求选择对应的分支或配置参数。
-4. 点击 **Run workflow** 触发编译。
-5. 等待 Step 2 运行完毕，即可在 Actions 页面底部的 **Artifacts** 区域或 **Releases** 页面下载编译好的最终固件。
-
 ## 🎉 Thanks [![](https://img.shields.io/badge/-Thanks-FFFFFF.svg)](#-Thanks-)
 - [istoreos](https://github.com/istoreos/istoreos)
 - [amlogic-s9xxx-openwrt](https://github.com/ophub/amlogic-s9xxx-openwrt)
@@ -122,6 +119,7 @@
 - 🤝 使用本固件产生的所有后果均由使用者自行承担
 - ⚠️ 固件仍可能存在缺陷，开发者不提供任何形式的技术支持
 - 📜 请严格遵守国家网络安全法律法规，合法使用
+- 此固件基于 **官方镜像文件构建，但不保证完全无BUG**
 
 <a href="#readme">
 <img src="https://img.shields.io/badge/-返回顶部-FFFFFF.svg" title="返回顶部" align="right"/>
