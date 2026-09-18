@@ -65,6 +65,7 @@
 
 #### 用户可根据自己的实际需要对第三方插件的安装配置文件进行调节 ####
 24.10.x版本 /shell/custom-packages.sh
+
 25.12.x版本 /shell/apk-custom-packages.sh
 
 </div>
