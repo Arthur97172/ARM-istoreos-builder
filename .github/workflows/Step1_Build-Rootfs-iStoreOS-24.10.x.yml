@@ -195,6 +195,12 @@ jobs:
           echo "❌ 无法获取 Kmod 哈希，请检查官方源是否存在该版本: $BASE_URL"
           exit 1
         fi
+        if [ -f "imagebuilder/Makefile" ]; then
+          echo "🛠️ 正在给 ImageBuilder 的 wget 加上重试机制..."
+          sed -i 's/wget /wget --tries=5 --timeout=20 --waitretry=3 /g' imagebuilder/Makefile
+        fi
+        echo "=== repositories 内容 ==="
+        cat imagebuilder/repositories.conf
 
     - name: 🧱 构建iStoreOS-rootfs
       working-directory: ./imagebuilder
