@@ -42,6 +42,9 @@ CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-netwizard luci-i18n-netwizard-zh-cn"
 # nikki代理面板 (nikki)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES nikki luci-app-nikki luci-i18n-nikki-zh-cn"
 
+# Online-upgrade在线升级 (online-upgrade)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-online-upgrade"
+
 # openclash代理面板 (openclash)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-openclash"
 
