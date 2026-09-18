@@ -32,7 +32,7 @@
 2. 点击顶部导航栏的 **Actions** 标签页。
 3. 点击绿色按钮 **"I understand my workflows, go ahead and enable them"** 启用工作流。
 
-### 2. 运行 Step 1（基础固件编译）
+### 2. 运行 Step 1（基础rootfs固件编译）
 > ⚠️ **重要提示**：必须等待 **Step 1** 完全运行成功后，才能开始 Step 2！
 
 1. 在左侧工作流列表中选择 **Step 1**（例如：`Step1_Build-Rootfs-iStoreOS 24.10.x`）。
@@ -41,7 +41,7 @@
 4. 点击 **Run workflow** 开始运行。
 5. 等待任务完成（图标变为绿色的 `✔`）。
 
-### 3. 运行 Step 2（打包含有插件/扩展的最终镜像）
+### 3. 运行 Step 2（设备固件编译）
 1. 当 **Step 1** 顺利跑完并生成产物（Artifacts）后，在左侧选择 **Step 2**（例如：`Step2_Build-iStoreOS-ARM-24.10.x`）。
 2. 点击 **Run workflow** 下拉菜单。
 3. （可选）根据需求选择对应的分支或配置参数。
