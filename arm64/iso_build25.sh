@@ -32,6 +32,7 @@ PACKAGES="$PACKAGES -odhcpd odhcpd-ipv6only odhcp6c"
 PACKAGES="$PACKAGES -libustream-mbedtls -libustream-wolfssl libustream-openssl"
 PACKAGES="$PACKAGES ip-full ipset iw ppp ppp-mod-pppoe -wpad-basic-mbedtls -wpad-mbedtls -wpad-openssl wpad-mesh-openssl luci-proto-ppp luci-proto-ipv6"
 PACKAGES="$PACKAGES kmod-tcp-bbr"
+PACKAGES="$PACKAGES tmux"
 
 # [硬件驱动]
 PACKAGES="$PACKAGES -kmod-ath10k-sdio kmod-ath10k"
