@@ -11,15 +11,34 @@ echo "========================================" >> "$LOGFILE"
 # 基础设置
 # =========================================================
 
-wan_zone=$(uci show firewall 2>/dev/null |
-    awk -F '[.=]' '/^firewall\.[^.]+\.name=.wan.$/ {print $2; exit}')
+wan_zone=$(uci -q show firewall 2>/dev/null |
+    awk -F '[.=]' '$1 ~ /^firewall\.[^.]+$/ &&
+        $2 == "name" && $3 == "\047wan\047" {
+            sub(/^firewall\./, "", $1)
+            print $1
+            exit
+        }')
 
 if [ -n "$wan_zone" ]; then
     uci -q set "firewall.$wan_zone.input=ACCEPT"
     echo "Firewall WAN zone: $wan_zone -> input ACCEPT" >> "$LOGFILE"
 else
-    uci -q set firewall.@zone[1].input='ACCEPT'
-    echo "WARNING: WAN zone not found, fallback to firewall.@zone[1]" >> "$LOGFILE"
+    echo "WARNING: WAN zone not found, trying fallback." >> "$LOGFILE"
+
+    fallback_zone=$(uci -q show firewall 2>/dev/null |
+        awk -F '[.=]' '$1 ~ /^firewall\.@zone\[[0-9]+\]$/ &&
+            $2 == "name" && $3 == "\047wan\047" {
+                print $1
+                exit
+            }')
+
+    if [ -n "$fallback_zone" ]; then
+        uci -q set "$fallback_zone.input=ACCEPT"
+        echo "Fallback WAN zone: $fallback_zone -> input ACCEPT" >> "$LOGFILE"
+    else
+        uci -q set firewall.@zone[1].input='ACCEPT'
+        echo "WARNING: WAN zone unresolved, using legacy fallback firewall.@zone[1]" >> "$LOGFILE"
+    fi
 fi
 
 if ! uci show dhcp 2>/dev/null |
