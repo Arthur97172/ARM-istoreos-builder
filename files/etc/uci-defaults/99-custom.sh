@@ -139,6 +139,12 @@ elif [ "$count" -eq 1 ]; then
     uci -q delete network.lan.netmask
     uci -q delete network.lan.gateway
     uci -q delete network.lan.dns
+    
+    # 关闭 LAN DHCP 服务器（单网口旁路由模式）
+    uci -q set dhcp.lan=dhcp
+    uci -q set dhcp.lan.interface='lan'
+    uci -q set dhcp.lan.ignore='1'
+    echo "LAN DHCP server disabled (Single port/旁路由 mode)." >> "$LOGFILE"
 else
     echo "Multiple Ethernet user ports detected." >> "$LOGFILE"
     wan_ifname=""
@@ -207,11 +213,21 @@ else
         fi
     fi
 
-    # LAN 静态 IP (恢复直接写入占位符)
+    # LAN 静态 IP
     uci -q set network.lan.proto='static'
     uci -q set network.lan.ipaddr='__IPADDR__'
     uci -q set network.lan.netmask='255.255.255.0'
     echo "LAN IP set to: __IPADDR__/24" >> "$LOGFILE"
+
+    # 启用 LAN DHCP 服务器
+    uci -q set dhcp.lan=dhcp
+    uci -q set dhcp.lan.interface='lan'
+    uci -q set dhcp.lan.ignore='0'
+    uci -q set dhcp.lan.start='100'
+    uci -q set dhcp.lan.limit='150'
+    uci -q set dhcp.lan.leasetime='12h'
+
+    echo "LAN DHCP server enabled: start=100, limit=150, leasetime=12h" >> "$LOGFILE"
 fi
 
 # =========================================================
