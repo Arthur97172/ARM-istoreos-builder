@@ -24,6 +24,9 @@ CUSTOM_PACKAGES="$CUSTOM_PACKAGES bandix-plus luci-app-bandix-plus luci-i18n-ban
 # clashoo代理面板 (clashoo)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES clashoo luci-app-clashoo luci-i18n-clashoo-zh-cn"
 
+#CPU状态 (cpustatus)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-cpu-status"
+
 # daede代理面板 (daede)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES dae daed luci-app-daede"
 
