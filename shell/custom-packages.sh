@@ -58,8 +58,8 @@ CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-partexp luci-i18n-partexp-zh-cn"
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-passwall luci-i18n-passwall-zh-cn"
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES sing-box chinadns-ng geoview shadowsocksr-libev-ssr-local shadowsocksr-libev-ssr-redir"
 
-# 关机 (poweroffdevice)
-CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-poweroffdevice luci-i18n-poweroffdevice-zh-cn"
+# poweroff关机 (poweroff)
+CUSTOM_PACKAGES="$CUSTOM_PACKAGES luci-app-poweroff luci-i18n-poweroff-zh-cn"
 
 # 流媒体转发 (rtp2httpd)
 CUSTOM_PACKAGES="$CUSTOM_PACKAGES rtp2httpd luci-app-rtp2httpd luci-i18n-rtp2httpd-zh-cn"
