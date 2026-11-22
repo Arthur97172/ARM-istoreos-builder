@@ -13,6 +13,7 @@ on:
           - a311d-oes
           - alark35-3500
           - anas3035
+          - ai3399-c
           - aio-3399b
           - aio-3399c
           - aio-3399c-ai
@@ -58,6 +59,7 @@ on:
           - h88k
           - h88k-v3
           - h96-max-m2
+          - hd9901
           - hk1-rbox-k8s
           - houzzkit-f1
           - hs530r
@@ -66,6 +68,7 @@ on:
           - indiedroid-nova
           - ipc-r
           - jp-tvbox
+          - kickpi-k11c-v12
           - king3399
           - kylin3399
           - lckfb-tspi
@@ -81,8 +84,10 @@ on:
           - lz-d3568
           - lz-d3588
           - lz-k3568
+          - lzk4
           - md1000
           - mrkaio-m68s
+          - mytv-net1
           - nanopc-t4
           - nanopc-t6
           - nanopi-m5
@@ -109,6 +114,7 @@ on:
           - rk3318-box
           - roceos-k40pro
           - rock-5-itx
+          - rock-3a
           - rock-3b
           - rock-3c
           - rock5b
@@ -135,7 +141,6 @@ on:
           - s905l3a
           - s905l3a-cm311
           - s905l3a-m401a
-          - s905l3a-w103d
           - s905l3b
           - s905l3b-e900v21d
           - s905l3b-e900v22d
@@ -163,6 +168,7 @@ on:
           - s905x2-km3
           - s905x2-x96max-2g
           - s905x2-hg680fj
+          - s905x2-w103d
           - s905x3
           - s905x3-2101
           - s905x3-a100
@@ -180,6 +186,7 @@ on:
           - s905x3-ugoosx3
           - s905x3-whale
           - s905x3-x88-pro-x3
+          - s905x3-yzd-s18
           - s905x3-x96air
           - s905x3-x96air-gb
           - s905x3-x96max
@@ -220,7 +227,9 @@ on:
           - tanix-tx6
           - tb-ls3399
           - tn3399
+          - torder-r10d
           - tpm312
+          - tps781
           - tqc-a01
           - tvi3315a
           - vontar-h618
@@ -230,13 +239,17 @@ on:
           - wxy-oect-mod
           - x88pro13
           - x88pro20
+          - x96-max-plus-ultra
           - x98h
+          - x98h-100mb
           - xiaobao
           - xingyicloud
+          - ydzy-box
           - youyeetoo-r1-v3
           - youyeetoo-yy3568
           - youyeetoo-yy3588
           - yskj
+          - z93a
           - zcube1-max
           - zk-r39a
           - ztl-a568
